@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Products - Madaklasht Store</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+body{
+  font-family:'Poppins',sans-serif;
+  background:
+    radial-gradient(circle at top left, rgba(239,68,68,0.16), transparent 32%),
+    linear-gradient(180deg,#0f172a,#020617);
+  color:white;
+  padding-bottom:90px;
+  min-height:100vh;
+}
+
+header{
+  position:sticky;
+  top:0;
+  background:rgba(17,24,39,0.92);
+  backdrop-filter:blur(16px);
+  padding:15px;
+  text-align:center;
+  z-index:1000;
+  box-shadow:0 2px 14px rgba(0,0,0,0.35);
+  border-bottom:1px solid rgba(255,255,255,0.06);
+}
+
+header h1{
+  font-size:1.7rem;
+}
+
+.red{
+  color:#ef4444;
+}
+
+main{
+  padding:15px;
+  max-width:700px;
+  margin:auto;
+}
+
+.products-hero{
+  background:linear-gradient(135deg,#1e293b,#111827);
+  border-radius:22px;
+  padding:24px;
+  text-align:center;
+  margin-bottom:18px;
+  box-shadow:0 8px 28px rgba(0,0,0,0.35);
+  border:1px solid rgba(255,255,255,0.06);
+}
+
+.products-hero h2{
+  font-size:2rem;
+  margin-bottom:8px;
+}
+
+.products-hero p{
+  color:#cbd5e1;
+  font-size:15px;
+  line-height:1.7;
+}
+
+/* SEARCH */
+.search-box{
+  position:relative;
+  margin-bottom:12px;
+}
+
+.search-box input{
+  width:100%;
+  border:none;
+  outline:none;
+  color:white;
+  background:rgba(15,23,42,0.68);
+  backdrop-filter:blur(18px);
+  border:1px solid rgba(255,255,255,0.12);
+  border-radius:18px;
+  padding:15px 16px;
+  font-size:14px;
+  box-shadow:
+    0 10px 30px rgba(0,0,0,0.28),
+    inset 0 1px 0 rgba(255,255,255,0.08);
+}
+
+.search-box input::placeholder{
+  color:#94a3b8;
+}
+
+/* FILTER */
+.filter-bar{
+  display:flex;
+  gap:10px;
+  width:100%;
+  padding:12px;
+  margin-bottom:20px;
+  overflow-x:auto;
+  overflow-y:hidden;
+  -webkit-overflow-scrolling:touch;
+  scrollbar-width:none;
+
+  background:rgba(15,23,42,0.62);
+  backdrop-filter:blur(18px);
+  border:1px solid rgba(255,255,255,0.12);
+  border-radius:18px;
+  box-shadow:
+    0 10px 30px rgba(0,0,0,0.28),
+    inset 0 1px 0 rgba(255,255,255,0.08);
+}
+
+.filter-bar::-webkit-scrollbar{
+  display:none;
+}
+
+.filter-btn{
+  flex:0 0 auto;
+  white-space:nowrap;
+  border:1px solid rgba(255,255,255,0.08);
+  background:rgba(30,41,59,0.72);
+  color:#e5e7eb;
+  padding:9px 15px;
+  border-radius:999px;
+  font-size:13px;
+  font-weight:600;
+  cursor:pointer;
+}
+
+.filter-btn.active{
+  background:linear-gradient(135deg,#ef4444,#f97316);
+  color:white;
+  box-shadow:0 8px 18px rgba(239,68,68,0.28);
+}
+
+/* PRODUCTS */
+.products-grid{
+  display:grid;
+  grid-template-columns:repeat(2, 1fr);
+  gap:12px;
+}
+
+.product-card{
+  background:rgba(30,41,59,0.95);
+  border-radius:18px;
+  overflow:hidden;
+  box-shadow:0 8px 24px rgba(0,0,0,0.32);
+  border:1px solid rgba(255,255,255,0.06);
+  animation:fadeIn .4s ease;
+}
+
+.product-card img{
+  width:100%;
+  height:135px;
+  object-fit:cover;
+  display:block;
+  background:#334155;
+}
+
+.product-content{
+  padding:11px;
+}
+
+.product-content h3{
+  color:#f8fafc;
+  font-size:14px;
+  line-height:1.35;
+  margin-bottom:6px;
+  word-break:break-word;
+}
+
+.product-desc{
+  color:#cbd5e1;
+  font-size:12px;
+  line-height:1.5;
+  display:-webkit-box;
+  -webkit-line-clamp:2;
+  -webkit-box-orient:vertical;
+  overflow:hidden;
+  word-break:break-word;
+}
+
+.product-bottom{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:8px;
+  margin-top:10px;
+}
+
+.product-category{
+  color:#fecaca;
+  background:rgba(239,68,68,0.14);
+  border:1px solid rgba(239,68,68,0.28);
+  border-radius:999px;
+  padding:5px 9px;
+  font-size:11px;
+  font-weight:700;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+.product-price{
+  color:#22c55e;
+  font-size:13px;
+  font-weight:700;
+  white-space:nowrap;
+}
+
+.empty-message{
+  grid-column:1 / -1;
+  text-align:center;
+  color:#cbd5e1;
+  padding:24px 10px;
+}
+
+/* SKELETON */
+.skeleton-card{
+  background:#1e293b;
+  border-radius:18px;
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,0.06);
+}
+
+.skeleton-img,
+.skeleton-line{
+  background:linear-gradient(90deg,#334155 0%,#475569 50%,#334155 100%);
+  background-size:200% 100%;
+  animation:shimmer 1.3s infinite linear;
+}
+
+.skeleton-img{
+  height:135px;
+}
+
+.skeleton-content{
+  padding:11px;
+}
+
+.skeleton-line{
+  height:11px;
+  border-radius:8px;
+  margin-bottom:9px;
+}
+
+.skeleton-line.short{
+  width:62%;
+}
+
+/* NAV */
+.bottom-nav{
+  position:fixed;
+  bottom:0;
+  left:0;
+  width:100%;
+  height:72px;
+  background:rgba(17,24,39,0.95);
+  backdrop-filter:blur(16px);
+  display:flex;
+  justify-content:space-around;
+  align-items:center;
+  border-top:1px solid rgba(255,255,255,0.08);
+  z-index:1000;
+}
+
+.bottom-nav a{
+  text-decoration:none;
+  color:#94a3b8;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  font-size:12px;
+  width:20%;
+}
+
+.bottom-nav a span{
+  font-size:22px;
+  margin-bottom:4px;
+}
+
+.bottom-nav a.active,
+.bottom-nav a:hover{
+  color:#ef4444;
+}
+
+@keyframes fadeIn{
+  from{opacity:0; transform:translateY(10px);}
+  to{opacity:1; transform:translateY(0);}
+}
+
+@keyframes shimmer{
+  from{background-position:200% 0;}
+  to{background-position:-200% 0;}
+}
+
+@media(max-width:420px){
+  .products-hero h2{
+    font-size:1.7rem;
+  }
+
+  .product-card img{
+    height:125px;
+  }
+
+  .product-content h3{
+    font-size:13px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1><span class="red">Madaklasht</span> Store</h1>
+</header>
+
+<main>
+
+<div class="products-hero">
+  <h2>Explore Our Products</h2>
+  <p>Find fresh local items, dairy products, groceries, and daily essentials.</p>
+</div>
+
+<div class="search-box">
+  <input
+    type="search"
+    id="productSearch"
+    placeholder="Search cream, yogurt, milk, ice cream..."
+    oninput="applyProductFilters()"
+  >
+</div>
+
+<div class="filter-bar">
+  <button type="button" class="filter-btn active" onclick="setProductFilter('All', this)">All</button>
+  <button type="button" class="filter-btn" onclick="setProductFilter('Fresh', this)">Fresh</button>
+  <button type="button" class="filter-btn" onclick="setProductFilter('Dairy', this)">Dairy</button>
+  <button type="button" class="filter-btn" onclick="setProductFilter('Food', this)">Food</button>
+  <button type="button" class="filter-btn" onclick="setProductFilter('Grocery', this)">Grocery</button>
+  <button type="button" class="filter-btn" onclick="setProductFilter('Other', this)">Other</button>
+</div>
+
+<div id="productsContainer" class="products-grid">
+  <div class="skeleton-card">
+    <div class="skeleton-img"></div>
+    <div class="skeleton-content">
+      <div class="skeleton-line"></div>
+      <div class="skeleton-line short"></div>
+    </div>
+  </div>
+
+  <div class="skeleton-card">
+    <div class="skeleton-img"></div>
+    <div class="skeleton-content">
+      <div class="skeleton-line"></div>
+      <div class="skeleton-line short"></div>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<nav class="bottom-nav">
+  <a href="index.html">
+    <span>⌂</span>
+    <p>Home</p>
+  </a>
+
+  <a href="products.html" class="active">
+    <span>□</span>
+    <p>Shop</p>
+  </a>
+
+  <a href="news.html">
+    <span>≡</span>
+    <p>News</p>
+  </a>
+
+  <a href="tourism.html">
+    <span>⌖</span>
+    <p>Tourism</p>
+  </a>
+
+  <a href="account.html">
+    <span>○</span>
+    <p>Account</p>
+  </a>
+</nav>
+
+<script>
+const API =
+"https://script.google.com/macros/s/AKfycbzRoJjmCgy--dsVAz8_TXu4CxiXiGGQ0GKTE6ufxN2Ctq8BceL1djQfp4N8vg65Jg0SaA/exec";
+
+let allProducts = [];
+let activeCategory = "All";
+
+function escapeHTML(value){
+  return String(value || "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
+/* Smart search correction */
+function normalizeText(value){
+  return String(value || "")
+    .toLowerCase()
+    .replaceAll("creame", "cream")
+    .replaceAll("creem", "cream")
+    .replaceAll("creme", "cream")
+    .replaceAll("yougrard", "yogurt")
+    .replaceAll("yougurt", "yogurt")
+    .replaceAll("yoghurt", "yogurt")
+    .replace(/[^a-z0-9\s]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function getProductCategory(item){
+  return item.category || item.type || "Fresh";
+}
+
+function getSearchText(item){
+  return normalizeText([
+    item.name,
+    item.title,
+    item.description,
+    item.category,
+    item.type,
+    item.price
+  ].join(" "));
+}
+
+function productMatchesSearch(item, query){
+  const cleanQuery = normalizeText(query);
+
+  if(!cleanQuery){
+    return true;
+  }
+
+  const words = cleanQuery.split(" ").filter(Boolean);
+  const productText = getSearchText(item);
+
+  return words.every(word => productText.includes(word));
+}
+
+function renderProducts(productList){
+  const box = document.getElementById("productsContainer");
+  box.innerHTML = "";
+
+  if(!productList || productList.length === 0){
+    box.innerHTML = "<p class='empty-message'>No products found</p>";
+    return;
+  }
+
+  box.innerHTML = productList.map(item => {
+    const title = escapeHTML(item.name || item.title || "Untitled Product");
+    const description = escapeHTML(item.description || "");
+    const image = escapeHTML(item.image || "");
+    const category = escapeHTML(getProductCategory(item));
+    const price = escapeHTML(item.price || item.rate || "");
+
+    return `
+      <div class="product-card">
+        <img src="${image}" alt="${title}" onerror="this.style.display='none'">
+
+        <div class="product-content">
+          <h3>${title}</h3>
+
+          <p class="product-desc">${description}</p>
+
+          <div class="product-bottom">
+            <span class="product-category">${category}</span>
+            ${price ? `<span class="product-price">${price}</span>` : ""}
+          </div>
+        </div>
+      </div>
+    `;
+  }).join("");
+}
+
+function setProductFilter(category, btn){
+  activeCategory = category;
+
+  document.querySelectorAll(".filter-btn").forEach(button => {
+    button.classList.remove("active");
+  });
+
+  btn.classList.add("active");
+  applyProductFilters();
+}
+
+function applyProductFilters(){
+  const searchValue = document.getElementById("productSearch").value;
+  const selectedCategory = activeCategory.toLowerCase();
+
+  const filtered = allProducts.filter(item => {
+    const category = String(getProductCategory(item)).toLowerCase();
+
+    const categoryMatches =
+      selectedCategory === "all" ||
+      category === selectedCategory;
+
+    return categoryMatches && productMatchesSearch(item, searchValue);
+  });
+
+  renderProducts(filtered);
+}
+
+async function fetchProducts(){
+  const productTypes = ["products", "fresh"];
+
+  for(const type of productTypes){
+    try{
+      const res = await fetch(API + "?type=" + type);
+      const data = await res.json();
+
+      if(Array.isArray(data) && data.length > 0){
+        return data;
+      }
+    }catch(err){}
+  }
+
+  return [];
+}
+
+async function loadProducts(){
+  try{
+    allProducts = await fetchProducts();
+    applyProductFilters();
+
+  }catch(err){
+    document.getElementById("productsContainer").innerHTML =
+      "<p class='empty-message'>Failed to load products</p>";
+  }
+}
+
+loadProducts();
+</script>
+
+</body>
+</html>

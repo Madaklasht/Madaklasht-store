@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Orders - Madaklasht Store</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Poppins',sans-serif;background:#0f172a;color:white;padding-bottom:90px;}
+
+/* HEADER */
+header{position:sticky;top:0;background:#111827;padding:15px;text-align:center;z-index:1000;box-shadow:0 2px 10px rgba(0,0,0,0.3);}
+header h1{font-size:1.6rem;}
+.red{color:#ef4444;}
+
+/* MAIN */
+main{max-width:700px;margin:auto;padding:15px;position:relative;min-height:calc(100vh - 72px - 58px);}
+
+/* LOADING OVERLAY */
+#loadingOverlay{
+  position:absolute;
+  top:0;left:0;right:0;bottom:0;
+  background:#0f172a;
+  z-index:100;
+  padding:15px;
+  transition:opacity 0.6s ease;
+}
+#loadingOverlay.hide{opacity:0;pointer-events:none;}
+
+/* SKELETON */
+.sk-top-card{background:#1e293b;border-radius:22px;padding:18px;margin-bottom:15px;position:relative;overflow:hidden;}
+.sk-hero-card{background:#1e293b;border-radius:22px;padding:20px;margin-bottom:15px;position:relative;overflow:hidden;}
+.sk-filter-row{display:flex;gap:8px;margin-bottom:4px;}
+.sk-filter-pill{height:32px;background:#334155;border-radius:12px;flex:1;}
+.sk-line{height:12px;background:#334155;border-radius:8px;margin:8px auto;}
+.sk-line.w80{width:80%;}
+.sk-line.w50{width:50%;}
+.sk-line.w65{width:65%;}
+.sk-line.w30{width:30%;}
+.sk-img{height:140px;background:#334155;border-radius:15px;margin-bottom:12px;}
+.sk-btn{height:30px;background:#334155;border-radius:12px;width:35%;margin:12px auto 0;}
+.sk-card{background:#1e293b;border-radius:22px;padding:18px;margin-bottom:15px;position:relative;overflow:hidden;}
+.sk-stat-row{display:flex;gap:10px;margin-bottom:15px;}
+.sk-stat{flex:1;height:70px;background:#1e293b;border-radius:16px;position:relative;overflow:hidden;}
+
+.shimmer::after{
+  content:"";
+  position:absolute;
+  top:0;left:-150%;
+  width:150%;height:100%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.07),transparent);
+  animation:shimmer 1.3s infinite;
+}
+@keyframes shimmer{100%{left:150%;}}
+
+/* TITLE ROW */
+.title-row{display:flex;align-items:center;justify-content:center;position:relative;margin:15px 0;}
+.back-btn{position:absolute;left:0;background:#1e293b;border:none;color:white;padding:8px 12px;border-radius:10px;cursor:pointer;font-size:16px;}
+.title-row h2{font-size:18px;}
+
+/* HERO SUMMARY CARD */
+.hero-card{
+  background:linear-gradient(135deg,#1e293b,#111827);
+  border-radius:22px;
+  padding:20px;
+  margin-bottom:15px;
+  box-shadow:0 5px 20px rgba(0,0,0,0.3);
+  animation:fadeIn 0.4s ease;
+}
+.hero-card h3{font-size:16px;margin-bottom:6px;}
+.hero-card p{color:#94a3b8;font-size:13px;line-height:1.7;margin-bottom:16px;}
+
+/* STATS ROW inside hero */
+.stats-row{display:flex;gap:10px;}
+.stat-box{flex:1;background:#0f172a;border-radius:14px;padding:12px 8px;text-align:center;}
+.stat-box h4{font-size:20px;font-weight:600;margin-bottom:4px;}
+.stat-box span{font-size:11px;color:#94a3b8;}
+.stat-box h4.total{color:#ef4444;}
+.stat-box h4.processing{color:#facc15;}
+.stat-box h4.delivered{color:#22c55e;}
+.stat-box h4.cancelled{color:#ef4444;}
+
+/* FILTER CARD */
+.top-card{background:#1e293b;border-radius:22px;padding:16px;margin-bottom:15px;box-shadow:0 5px 20px rgba(0,0,0,0.3);animation:fadeIn 0.4s ease;}
+.filters{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;}
+.filter-btn{padding:7px 14px;border:none;border-radius:12px;background:#0f172a;color:#cbd5e1;cursor:pointer;font-size:12px;font-family:'Poppins',sans-serif;transition:background 0.2s,color 0.2s;}
+.filter-btn.active{background:#ef4444;color:white;}
+
+/* ORDER CARD */
+.order-card{
+  background:#1e293b;
+  border-radius:22px;
+  padding:0;
+  margin-bottom:15px;
+  box-shadow:0 5px 20px rgba(0,0,0,0.3);
+  animation:fadeIn 0.4s ease;
+  overflow:hidden;
+}
+.order-img{width:100%;height:160px;object-fit:cover;}
+.order-body{padding:16px;}
+.order-name{font-size:15px;font-weight:600;margin-bottom:10px;}
+.order-meta{display:flex;flex-direction:column;gap:6px;margin-bottom:12px;}
+.order-row{display:flex;justify-content:space-between;align-items:center;font-size:13px;color:#cbd5e1;}
+.order-row .val{color:white;font-weight:500;}
+.order-row .val.green{color:#22c55e;}
+.order-divider{height:1px;background:#0f172a;margin:12px 0;}
+
+/* TRACK BAR */
+.track-bar{display:flex;align-items:center;gap:0;margin-bottom:4px;}
+.track-step{display:flex;flex-direction:column;align-items:center;flex:1;}
+.track-dot{width:18px;height:18px;border-radius:50%;background:#334155;display:flex;align-items:center;justify-content:center;font-size:9px;position:relative;z-index:1;}
+.track-dot.done{background:#22c55e;}
+.track-dot.active{background:#ef4444;box-shadow:0 0 0 4px rgba(239,68,68,0.2);}
+.track-dot.cancelled-dot{background:#ef4444;}
+.track-line{flex:1;height:2px;background:#334155;margin-top:-9px;}
+.track-line.done{background:#22c55e;}
+.track-labels{display:flex;margin-top:6px;}
+.track-label{flex:1;font-size:9px;color:#64748b;text-align:center;}
+.track-label.done{color:#22c55e;}
+.track-label.active{color:#ef4444;}
+
+/* STATUS BADGE */
+.status-badge{display:inline-block;padding:5px 14px;border-radius:12px;font-size:11px;font-weight:600;}
+.status-badge.processing{background:rgba(250,204,21,0.15);color:#facc15;}
+.status-badge.delivered{background:rgba(34,197,94,0.15);color:#22c55e;}
+.status-badge.cancelled{background:rgba(239,68,68,0.15);color:#ef4444;}
+
+/* EMPTY */
+.empty-state{text-align:center;padding:40px 20px;color:#64748b;font-size:14px;}
+.empty-state .icon{font-size:2.5rem;margin-bottom:10px;}
+
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+
+/* BOTTOM NAV */
+.bottom-nav{position:fixed;bottom:0;left:0;width:100%;height:72px;background:#111827;display:flex;justify-content:space-around;align-items:center;border-top:1px solid #1e293b;z-index:1000;}
+.bottom-nav a{text-decoration:none;color:#94a3b8;display:flex;flex-direction:column;align-items:center;font-size:12px;}
+.bottom-nav a span{font-size:22px;margin-bottom:4px;}
+.bottom-nav a.active{color:#ef4444;}
+</style>
+</head>
+<body>
+
+<header>
+  <h1><span class="red">Madaklasht</span> Store</h1>
+</header>
+
+<main>
+
+  <!-- SHIMMER OVERLAY -->
+  <div id="loadingOverlay">
+
+    <div style="display:flex;align-items:center;justify-content:center;position:relative;margin:15px 0;">
+      <div style="position:absolute;left:0;width:44px;height:36px;background:#1e293b;border-radius:10px;"></div>
+      <div style="height:18px;width:130px;background:#334155;border-radius:8px;"></div>
+    </div>
+
+    <!-- skeleton hero -->
+    <div class="sk-hero-card shimmer">
+      <div class="sk-line w50" style="margin-bottom:10px;"></div>
+      <div class="sk-line w80"></div>
+      <div class="sk-line w65" style="margin-bottom:16px;"></div>
+      <div class="sk-stat-row">
+        <div class="sk-stat shimmer"></div>
+        <div class="sk-stat shimmer"></div>
+        <div class="sk-stat shimmer"></div>
+        <div class="sk-stat shimmer"></div>
+      </div>
+    </div>
+
+    <!-- skeleton filter card -->
+    <div class="sk-top-card shimmer">
+      <div class="sk-filter-row">
+        <div class="sk-filter-pill"></div>
+        <div class="sk-filter-pill"></div>
+        <div class="sk-filter-pill"></div>
+        <div class="sk-filter-pill"></div>
+      </div>
+    </div>
+
+    <!-- skeleton order cards -->
+    <div class="sk-card shimmer">
+      <div class="sk-img"></div>
+      <div class="sk-line w80"></div>
+      <div class="sk-line w50"></div>
+      <div class="sk-line w65"></div>
+      <div class="sk-btn"></div>
+    </div>
+    <div class="sk-card shimmer">
+      <div class="sk-line w80"></div>
+      <div class="sk-line w50"></div>
+      <div class="sk-line w65"></div>
+      <div class="sk-btn"></div>
+    </div>
+
+  </div>
+
+  <!-- REAL CONTENT -->
+  <div id="pageContent" style="display:none;">
+
+    <div class="title-row">
+      <button class="back-btn" onclick="goBack()">⬅</button>
+      <h2>📦 My Orders</h2>
+    </div>
+
+    <!-- HERO SUMMARY CARD -->
+    <div class="hero-card">
+      <h3>Track Your Orders</h3>
+      <p>Stay updated on all your purchases — from processing to doorstep delivery.</p>
+      <div class="stats-row">
+        <div class="stat-box"><h4 class="total" id="statTotal">0</h4><span>Total</span></div>
+        <div class="stat-box"><h4 class="processing" id="statProcessing">0</h4><span>Processing</span></div>
+        <div class="stat-box"><h4 class="delivered" id="statDelivered">0</h4><span>Delivered</span></div>
+        <div class="stat-box"><h4 class="cancelled" id="statCancelled">0</h4><span>Cancelled</span></div>
+      </div>
+    </div>
+
+    <!-- FILTER CARD -->
+    <div class="top-card">
+      <div class="filters">
+        <button class="filter-btn active" onclick="filterOrders('all', this)">All</button>
+        <button class="filter-btn" onclick="filterOrders('Processing', this)">Processing</button>
+        <button class="filter-btn" onclick="filterOrders('Delivered', this)">Delivered</button>
+        <button class="filter-btn" onclick="filterOrders('Cancelled', this)">Cancelled</button>
+      </div>
+    </div>
+
+    <div id="ordersBox"></div>
+
+  </div>
+
+</main>
+
+<nav class="bottom-nav">
+  <a href="index.html"><span>🏠</span><p>Home</p></a>
+  <a href="products.html"><span>🛒</span><p>Shop</p></a>
+  <a href="news.html"><span>📰</span><p>News</p></a>
+  <a href="tourism.html"><span>🗺️</span><p>Tourism</p></a>
+  <a href="account.html"><span>👤</span><p>Account</p></a>
+</nav>
+
+<script>
+const API = "https://script.google.com/macros/s/AKfycbzWmBxTn30d2dZoPIdfC0VE9cL-Mt6UtEn8eUTVuJJFMx-1vnh7NmfJsJO2_q0YIc0ZRA/exec";
+
+let allOrders     = [];
+let currentFilter = "all";
+
+function goBack(){ window.location.href = "account.html"; }
+
+function showContent(){
+  const ov = document.getElementById("loadingOverlay");
+  ov.classList.add("hide");
+  setTimeout(() => ov.style.display = "none", 700);
+  document.getElementById("pageContent").style.display = "block";
+}
+
+/* Animate number */
+function animNum(id, target){
+  const el = document.getElementById(id);
+  let n = 0;
+  const step = Math.max(1, Math.ceil(target / 20));
+  const iv = setInterval(() => {
+    n = Math.min(n + step, target);
+    el.innerText = n;
+    if(n >= target) clearInterval(iv);
+  }, 40);
+}
+
+function updateStats(){
+  const total      = allOrders.length;
+  const processing = allOrders.filter(o => o.status === "Processing").length;
+  const delivered  = allOrders.filter(o => o.status === "Delivered").length;
+  const cancelled  = allOrders.filter(o => o.status === "Cancelled").length;
+  animNum("statTotal",      total);
+  animNum("statProcessing", processing);
+  animNum("statDelivered",  delivered);
+  animNum("statCancelled",  cancelled);
+}
+
+/* Track bar HTML */
+function trackBar(status){
+  if(status === "Cancelled"){
+    return `
+      <div class="order-divider"></div>
+      <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:#ef4444;">
+        ❌ <span>This order was cancelled</span>
+      </div>`;
+  }
+  const steps   = ["Placed","Processing","Delivered"];
+  const stepMap = {"Placed":0,"Processing":1,"Delivered":2};
+  const cur     = stepMap[status] ?? 1;
+  let dotsHtml  = "";
+  let linesHtml = "";
+  let labelsHtml= "";
+  steps.forEach((s, i) => {
+    const cls = i < cur ? "done" : i === cur ? "active" : "";
+    dotsHtml += `<div class="track-dot ${cls}">${i < cur ? "✓" : ""}</div>`;
+    if(i < steps.length - 1){
+      dotsHtml += `<div class="track-line ${i < cur ? "done" : ""}"></div>`;
+    }
+    labelsHtml += `<div class="track-label ${i < cur ? "done" : i === cur ? "active" : ""}">${s}</div>`;
+  });
+  return `
+    <div class="order-divider"></div>
+    <div class="track-bar">${dotsHtml}</div>
+    <div class="track-labels">${labelsHtml}</div>`;
+}
+
+/* Load orders */
+async function loadMyOrders(){
+  const email = localStorage.getItem("userEmail");
+  if(!email){ showContent(); return; }
+  try{
+    const res  = await fetch(API, {method:"POST", body: JSON.stringify({action:"getUserOrders", email})});
+    const data = await res.json();
+    if(data.status === "success") allOrders = data.orders || [];
+  }catch(e){}
+  updateStats();
+  renderOrders();
+  showContent();
+}
+
+/* Render */
+function renderOrders(){
+  const box      = document.getElementById("ordersBox");
+  const filtered = currentFilter === "all"
+    ? allOrders
+    : allOrders.filter(o => o.status === currentFilter);
+
+  if(!filtered.length){
+    box.innerHTML = `<div class="empty-state"><div class="icon">📦</div><p>No orders found</p></div>`;
+    return;
+  }
+
+  box.innerHTML = filtered.map(order => {
+    const status  = order.status || "Processing";
+    const badgeCls= status.toLowerCase();
+    return `
+      <div class="order-card">
+        ${order.image ? `<img class="order-img" src="${order.image}">` : ""}
+        <div class="order-body">
+          <div class="order-name">${order.product || "Product"}</div>
+          <div class="order-meta">
+            <div class="order-row">
+              <span>Quantity</span>
+              <span class="val">${order.qty || 0}</span>
+            </div>
+            <div class="order-row">
+              <span>Price</span>
+              <span class="val green">${order.price || 0} PKR</span>
+            </div>
+            <div class="order-row">
+              <span>Order Date</span>
+              <span class="val">${order.date ? order.date.split("T")[0] : "—"}</span>
+            </div>
+            <div class="order-row">
+              <span>Status</span>
+              <span class="status-badge ${badgeCls}">${status}</span>
+            </div>
+          </div>
+          ${trackBar(status)}
+        </div>
+      </div>`;
+  }).join("");
+}
+
+/* Filter */
+function filterOrders(type, btn){
+  currentFilter = type;
+  document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+  btn.classList.add("active");
+  renderOrders();
+}
+
+window.onload = loadMyOrders;
+</script>
+</body>
+</html>

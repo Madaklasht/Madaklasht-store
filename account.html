@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Account - Madaklasht Store</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+
+/* RESET */
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+body{
+  font-family:'Poppins',sans-serif;
+  background:#0f172a;
+  color:white;
+  min-height:100vh;
+  padding-bottom:90px;
+}
+
+/* HEADER */
+header{
+  background:#111827;
+  padding:18px;
+  text-align:center;
+  position:sticky;
+  top:0;
+  z-index:1000;
+  box-shadow:0 2px 10px rgba(0,0,0,0.3);
+}
+
+header h1{
+  font-size:1.7rem;
+}
+
+.red{
+  color:#ef4444;
+}
+
+/* MAIN */
+main{
+  max-width:500px;
+  margin:auto;
+  padding:20px;
+}
+
+/* CARD */
+.card{
+  background:#1e293b;
+  border-radius:22px;
+  padding:25px;
+  margin-top:25px;
+  box-shadow:0 5px 20px rgba(0,0,0,0.3);
+  animation:fadeIn 0.5s ease;
+}
+
+.card h2{
+  text-align:center;
+  margin-bottom:20px;
+}
+
+/* INPUT */
+.input-group{
+  margin-bottom:18px;
+}
+
+.input-group label{
+  display:block;
+  margin-bottom:8px;
+  color:#cbd5e1;
+}
+
+.input-group input{
+  width:100%;
+  padding:14px;
+  border:none;
+  border-radius:14px;
+  background:#0f172a;
+  color:white;
+  font-size:15px;
+  outline:none;
+}
+
+/* BUTTON */
+button{
+  width:100%;
+  padding:14px;
+  border:none;
+  border-radius:14px;
+  background:#ef4444;
+  color:white;
+  font-size:16px;
+  font-weight:600;
+  cursor:pointer;
+  margin-top:10px;
+}
+
+button:hover{
+  opacity:0.9;
+}
+
+/* SWITCH */
+.switch{
+  text-align:center;
+  margin-top:20px;
+  color:#cbd5e1;
+}
+
+.switch span{
+  color:#ef4444;
+  cursor:pointer;
+  font-weight:600;
+}
+
+/* DASHBOARD */
+.dashboard{
+  text-align:center;
+}
+
+.dashboard h2{
+  margin-bottom:10px;
+}
+
+.dashboard p{
+  color:#cbd5e1;
+  margin-bottom:20px;
+}
+
+.dashboard-btn{
+  display:block;
+  width:100%;
+  background:#0f172a;
+  padding:15px;
+  border-radius:14px;
+  margin-bottom:15px;
+  text-decoration:none;
+  color:white;
+  font-weight:500;
+}
+
+/* NAVIGATION */
+.bottom-nav{
+  position:fixed;
+  bottom:0;
+  left:0;
+  width:100%;
+  height:72px;
+  background:#111827;
+  display:flex;
+  justify-content:space-around;
+  align-items:center;
+  border-top:1px solid #1e293b;
+}
+
+.bottom-nav a{
+  text-decoration:none;
+  color:#94a3b8;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  font-size:12px;
+}
+
+.bottom-nav a span{
+  font-size:22px;
+  margin-bottom:4px;
+}
+
+.bottom-nav a.active{
+  color:#ef4444;
+}
+
+/* ANIMATION */
+@keyframes fadeIn{
+  from{
+    opacity:0;
+    transform:translateY(10px);
+  }
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+}
+/* TOAST MESSAGE */
+#toast{
+  position:fixed;
+  top:20px;
+  left:50%;
+  transform:translateX(-50%);
+  background:#111827;
+  color:white;
+  padding:14px 22px;
+  border-radius:14px;
+  font-size:14px;
+  z-index:9999;
+  opacity:0;
+  pointer-events:none;
+  transition:0.4s;
+  box-shadow:0 5px 20px rgba(0,0,0,0.3);
+}
+
+/* SHOW TOAST */
+#toast.show{
+  opacity:1;
+  top:40px;
+}
+
+/* SUCCESS */
+#toast.success{
+  border-left:5px solid #22c55e;
+}
+
+/* ERROR */
+#toast.error{
+  border-left:5px solid #ef4444;
+}
+
+.stats{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  margin:25px 0;
+}
+
+.stat-box{
+  flex:1;
+  background:#0f172a;
+  border-radius:14px;
+  padding:15px;
+  text-align:center;
+}
+
+.stat-box h3{
+  color:#ef4444;
+  font-size:22px;
+  margin-bottom:5px;
+}
+
+.stat-box p{
+  color:#cbd5e1;
+  font-size:13px;
+}
+
+.loading-number {
+  position: relative;
+  overflow: hidden;
+  color: #94a3b8;
+}
+
+.loading-number::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+  animation: shimmer 1.2s infinite;
+}
+
+@keyframes shimmer {
+  100% {
+    left: 100%;
+  }
+}
+
+.pulse {
+  animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+  0% { opacity: 0.5; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.05); }
+  100% { opacity: 0.5; transform: scale(1); }
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- HEADER -->
+<header>
+  <h1><span class="red">Madaklasht</span> Store</h1>
+</header>
+
+<main>
+
+<!-- LOGIN CARD -->
+<div class="card" id="loginCard">
+
+  <h2>Login</h2>
+
+  <div class="input-group">
+    <label>Email</label>
+    <input type="email" id="loginEmail" placeholder="Enter email">
+  </div>
+
+  <div class="input-group">
+    <label>Password</label>
+    <input type="password" id="loginPassword" placeholder="Enter password">
+  </div>
+
+  <button onclick="login()">Login</button>
+
+  <div class="switch">
+    Don't have account?
+    <span onclick="showRegister()">Register</span>
+  </div>
+
+</div>
+
+<!-- REGISTER CARD -->
+<div class="card" id="registerCard" style="display:none;">
+
+  <h2>Create Account</h2>
+
+  <div class="input-group">
+    <label>Full Name</label>
+    <input type="text" id="registerName" placeholder="Enter full name">
+  </div>
+
+  <div class="input-group">
+    <label>Phone Number</label>
+    <input type="text" id="registerPhone" placeholder="Enter phone number">
+  </div>
+
+  <div class="input-group">
+    <label>Email</label>
+    <input type="email" id="registerEmail" placeholder="Enter email">
+  </div>
+
+  <div class="input-group">
+    <label>Password</label>
+    <input type="password" id="registerPassword" placeholder="Create password">
+  </div>
+
+  <div class="input-group">
+    <label>Rewrite Password</label>
+    <input type="password" id="registerPassword2" placeholder="Rewrite password">
+  </div>
+
+  <button onclick="register()">Create Account</button>
+
+  <div class="switch">
+    Already have account?
+    <span onclick="showLogin()">Login</span>
+  </div>
+
+</div>
+
+<!-- DASHBOARD -->
+<div class="card dashboard" id="dashboardCard" style="display:none;">
+
+  <h2 id="welcomeText">Welcome</h2>
+
+  <p>
+    Manage your Madaklasht Store account
+  </p>
+
+  <div class="stats">
+
+    <div class="stat-box">
+      <h3 id="totalOrders">0</h3>
+      <p>Orders</p>
+    </div>
+
+    <div class="stat-box">
+      <h3 id="processingOrders">0</h3>
+      <p>Processing</p>
+    </div>
+
+    <div class="stat-box">
+      <h3 id="earnedAmount">0</h3>
+      <p>Earned</p>
+    </div>
+
+  </div>
+
+  <a href="myorders.html" class="dashboard-btn">🛒 My Orders</a>
+
+  <a href="#" class="dashboard-btn">➕ Add to Cart</a>
+
+  <a href="earn.html" class="dashboard-btn">💰 Earn With Us</a>
+
+  <a href="withdrawal.html" class="dashboard-btn">💸 Withdrawal</a>
+
+  <a href="#" class="dashboard-btn">📞 Contact Us</a>
+
+  <button onclick="logout()">Logout</button>
+
+</div>
+</main>
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+
+<a href="index.html">
+  <span>🏠</span>
+  <p>Home</p>
+</a>
+
+<a href="products.html">
+  <span>🛒</span>
+  <p>Shop</p>
+</a>
+
+<a href="news.html">
+  <span>📰</span>
+  <p>News</p>
+</a>
+
+<a href="tourism.html">
+  <span>🗺️</span>
+  <p>Tourism</p>
+</a>
+
+<a href="account.html" class="active">
+  <span>👤</span>
+  <p>Account</p>
+</a>
+
+</nav>
+
+<script>
+
+/* ================= API ================= */
+const API = "https://script.google.com/macros/s/AKfycbzWmBxTn30d2dZoPIdfC0VE9cL-Mt6UtEn8eUTVuJJFMx-1vnh7NmfJsJO2_q0YIc0ZRA/exec";
+
+/* ================= UI SWITCH ================= */
+function showRegister(){
+  document.getElementById("loginCard").style.display = "none";
+  document.getElementById("registerCard").style.display = "block";
+}
+
+function showLogin(){
+  document.getElementById("registerCard").style.display = "none";
+  document.getElementById("loginCard").style.display = "block";
+}
+
+/* ================= TOAST ================= */
+function showToast(message, type){
+
+  let toast = document.getElementById("toast");
+
+  toast.innerText = message;
+  toast.className = "";
+  toast.classList.add("show");
+  toast.classList.add(type);
+
+  setTimeout(() => {
+    toast.classList.remove("show");
+  }, 3000);
+}
+
+/* ================= REGISTER (REAL API) ================= */
+async function register(){
+
+  let name = document.getElementById("registerName").value.trim();
+  let phone = document.getElementById("registerPhone").value.trim();
+  let email = document.getElementById("registerEmail").value.trim().toLowerCase();
+  let password = document.getElementById("registerPassword").value;
+  let password2 = document.getElementById("registerPassword2").value;
+
+  if(!name || !phone || !email || !password || !password2){
+    return showToast("Please fill all fields","error");
+  }
+
+  if(password !== password2){
+    return showToast("Passwords do not match","error");
+  }
+
+  let btn = document.querySelector("#registerCard button");
+  btn.disabled = true;
+  btn.innerText = "Creating...";
+
+  try{
+
+    let res = await fetch(API, {
+      method: "POST",
+      body: JSON.stringify({
+        action: "register",
+        name,
+        phone,
+        email,
+        password
+      })
+    });
+
+    let data = await res.json();
+
+    btn.disabled = false;
+    btn.innerText = "Create Account";
+
+    if(data.status === "success"){
+      showToast("Account created successfully","success");
+      showLogin();
+    } else {
+      showToast(data.message || "Registration failed","error");
+    }
+
+  }catch(e){
+    btn.disabled = false;
+    btn.innerText = "Create Account";
+    showToast("Server error","error");
+  }
+}
+
+/* ================= loading bar ===============*/
+function startLoadingStats(){
+
+  document.getElementById("totalOrders").classList.add("loading-number","pulse");
+  document.getElementById("processingOrders").classList.add("loading-number","pulse");
+  document.getElementById("earnedAmount").classList.add("loading-number","pulse");
+
+  document.getElementById("totalOrders").innerText = "0";
+  document.getElementById("processingOrders").innerText = "0";
+  document.getElementById("earnedAmount").innerText = "0";
+}
+
+function stopLoadingStats(){
+
+  document.getElementById("totalOrders").classList.remove("loading-number","pulse");
+  document.getElementById("processingOrders").classList.remove("loading-number","pulse");
+  document.getElementById("earnedAmount").classList.remove("loading-number","pulse");
+}
+
+/* ================= LOGIN (REAL API CHECK) ================= */
+async function login(){
+
+  let email = document.getElementById("loginEmail").value.trim().toLowerCase();
+  let password = document.getElementById("loginPassword").value;
+
+  if(!email || !password){
+    return showToast("Please fill all fields","error");
+  }
+
+  let btn = document.querySelector("#loginCard button");
+  btn.disabled = true;
+  btn.innerText = "Logging in...";
+
+  try{
+
+    let res = await fetch(API, {
+      method: "POST",
+      body: JSON.stringify({
+        action: "login",
+        email,
+        password
+      })
+    });
+
+    let data = await res.json();
+
+    btn.disabled = false;
+    btn.innerText = "Login";
+
+    if(data.status === "success"){
+
+      localStorage.setItem("isLoggedIn","true");
+      localStorage.setItem("userEmail", email);
+      localStorage.setItem("userName", data.user.name);
+
+      showToast("Login successful","success");
+      showDashboard();
+      loadDashboardData();
+
+    } else {
+      showToast("Invalid email or password","error");
+    }
+
+  }catch(e){
+    btn.disabled = false;
+    btn.innerText = "Login";
+    showToast("Server error","error");
+  }
+}
+
+/* ================= GREETING ================= */
+function getGreeting(){
+
+  const hour = new Date().getHours();
+
+  if(hour < 12) return "Good Morning";
+  if(hour < 17) return "Good Afternoon";
+  if(hour < 20) return "Good Evening";
+  return "Good Night";
+}
+
+/* ================= DASHBOARD ================= */
+function showDashboard(){
+
+  document.getElementById("loginCard").style.display = "none";
+  document.getElementById("registerCard").style.display = "none";
+  document.getElementById("dashboardCard").style.display = "block";
+
+  let name = localStorage.getItem("userName") || "User";
+
+  document.getElementById("welcomeText").innerHTML =
+    `${getGreeting()} <span class="red">${name}</span>`;
+}
+
+/* ================= LOAD DASHBOARD DATA ================= */
+async function loadDashboardData(){
+
+  let email = localStorage.getItem("userEmail");
+  if(!email) return;
+
+  // 🔥 START ANIMATION
+  startLoadingStats();
+
+  try{
+
+    let res = await fetch(API, {
+      method: "POST",
+      body: JSON.stringify({
+        action: "getUserData",
+        email: email
+      })
+    });
+
+    let data = await res.json();
+
+    if(data.status === "success"){
+
+      // small delay for smooth feel
+      setTimeout(() => {
+
+        stopLoadingStats();
+
+        document.getElementById("totalOrders").innerText = data.totalOrders;
+        document.getElementById("processingOrders").innerText = data.processingOrders;
+        document.getElementById("earnedAmount").innerText = data.earnings;
+
+      }, 600);
+
+    }
+
+  }catch(e){
+
+    stopLoadingStats();
+    console.log("Dashboard error", e);
+
+  }
+}
+
+/* ================= LOGOUT ================= */
+function logout(){
+
+  localStorage.removeItem("isLoggedIn");
+  localStorage.removeItem("userEmail");
+  localStorage.removeItem("userName");
+
+  location.reload();
+}
+
+/* ================= AUTO LOGIN ================= */
+window.onload = function(){
+
+  if(localStorage.getItem("isLoggedIn") === "true"){
+    showDashboard();
+    loadDashboardData();
+  }
+
+}
+</script>
+<!-- TOAST MESSAGE -->
+<div id="toast"></div>
+</body>
+</html>

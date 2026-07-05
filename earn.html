@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Earn - Madaklasht Store</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Poppins',sans-serif;background:#0f172a;color:white;padding-bottom:90px;overflow-x:hidden;}
+.red{color:#ef4444;}
+
+/* OVERLAY — scoped inside main only */
+#loadingOverlay{
+  position:absolute;
+  top:0;left:0;right:0;bottom:0;
+  background:#0f172a;
+  z-index:100;
+  padding:15px;
+  transition:opacity 0.6s ease;
+  pointer-events:all;
+}
+#loadingOverlay.hide{opacity:0;pointer-events:none;}
+
+/* Skeleton pieces */
+.sk-hero{background:#1e293b;border-radius:22px;padding:28px;margin-bottom:16px;position:relative;overflow:hidden;}
+.sk-line{height:13px;background:#334155;border-radius:8px;margin-bottom:10px;}
+.sk-line.s{width:55%;}
+.sk-stats{display:flex;gap:10px;margin-bottom:16px;}
+.sk-stat{flex:1;background:#1e293b;border-radius:16px;height:78px;position:relative;overflow:hidden;}
+.sk-bar{height:44px;background:#1e293b;border-radius:14px;margin-bottom:12px;position:relative;overflow:hidden;}
+.sk-card{background:#1e293b;border-radius:20px;padding:20px;margin-bottom:14px;position:relative;overflow:hidden;}
+.sk-btn{height:44px;background:#334155;border-radius:12px;margin-top:12px;}
+.sk-row{height:13px;background:#334155;border-radius:8px;margin-bottom:9px;}
+.sk-row.s{width:60%;}
+.shimmer::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent,rgba(255,255,255,0.07) 50%,transparent);animation:shimD 1.4s infinite;}
+@keyframes shimD{0%{transform:translateY(-100%);}100%{transform:translateY(100%);}}
+
+/* HEADER */
+header{position:sticky;top:0;background:#111827;padding:15px;text-align:center;z-index:1000;box-shadow:0 2px 10px rgba(0,0,0,0.3);}
+header h1{font-size:1.7rem;}
+
+/* MAIN — must be position:relative to contain the overlay */
+main{
+  padding:15px;
+  max-width:500px;
+  margin:auto;
+  position:relative; /* KEY FIX */
+  min-height:calc(100vh - 72px - 58px); /* fill enough height for overlay */
+}
+
+/* HERO */
+.hero-card{background:linear-gradient(135deg,#1e293b,#111827);border-radius:24px;padding:24px 20px 20px;margin-bottom:20px;box-shadow:0 6px 25px rgba(0,0,0,0.3);animation:fadeIn 0.5s ease;}
+.back-btn{display:inline-flex;align-items:center;gap:6px;color:#94a3b8;text-decoration:none;font-size:14px;margin-bottom:16px;transition:color 0.2s;}
+.back-btn:hover{color:#ef4444;}
+.hero-card h2{font-size:1.7rem;margin-bottom:10px;}
+.hero-card p{color:#d1d5db;font-size:14px;line-height:1.8;}
+
+/* STATS */
+.stats{display:flex;gap:10px;margin-bottom:20px;}
+.stat-box{flex:1;background:#1e293b;border-radius:16px;padding:14px 10px;text-align:center;animation:fadeIn 0.5s ease;}
+.stat-box h3{color:#ef4444;font-size:22px;margin-bottom:4px;}
+.stat-box p{color:#94a3b8;font-size:11px;}
+
+/* LIVE BAR */
+.live-bar{display:flex;align-items:center;gap:8px;margin-bottom:16px;padding:10px 16px;background:#1e293b;border-radius:14px;}
+.live-dot{width:10px;height:10px;background:#ef4444;border-radius:50%;animation:livePulse 1.2s infinite;flex-shrink:0;}
+@keyframes livePulse{0%{box-shadow:0 0 0 0 rgba(239,68,68,0.7);}70%{box-shadow:0 0 0 8px rgba(239,68,68,0);}100%{box-shadow:0 0 0 0 rgba(239,68,68,0);}}
+.live-text{font-size:14px;font-weight:600;}
+.live-sub{margin-left:auto;font-size:11px;color:#64748b;}
+
+/* TABS */
+.filter-tabs{display:flex;background:#1e293b;border-radius:14px;padding:4px;margin-bottom:20px;gap:4px;}
+.tab-btn{flex:1;padding:10px;border:none;border-radius:11px;background:transparent;color:#94a3b8;font-size:14px;font-weight:500;cursor:pointer;font-family:'Poppins',sans-serif;transition:all 0.25s ease;}
+.tab-btn.active{background:#ef4444;color:white;}
+
+/* JOB CARD */
+.job-card{background:#1e293b;border-radius:20px;padding:18px;margin-bottom:14px;box-shadow:0 4px 15px rgba(0,0,0,0.2);animation:fadeIn 0.4s ease;}
+.job-title{font-size:15px;font-weight:600;margin-bottom:12px;}
+.job-meta{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;}
+.job-meta span{display:flex;align-items:center;gap:5px;font-size:13px;color:#cbd5e1;background:#0f172a;padding:6px 12px;border-radius:10px;}
+.job-meta .reward{color:#22c55e;font-weight:600;}
+
+/* MY JOB CARD */
+.my-job-card{background:#1e293b;border-radius:20px;padding:18px;margin-bottom:14px;box-shadow:0 4px 15px rgba(0,0,0,0.2);animation:fadeIn 0.4s ease;}
+.my-job-title{font-size:15px;font-weight:600;margin-bottom:12px;}
+.detail-row{display:flex;align-items:flex-start;gap:8px;margin-bottom:8px;font-size:13px;color:#cbd5e1;}
+.detail-row .lbl{color:#64748b;min-width:80px;flex-shrink:0;}
+
+/* BADGES */
+.badge{display:inline-block;padding:4px 12px;border-radius:30px;font-size:12px;font-weight:600;margin-bottom:14px;}
+.badge.assigned{background:rgba(234,179,8,0.15);color:#eab308;}
+.badge.processing{background:rgba(59,130,246,0.15);color:#60a5fa;}
+.badge.delivering{background:rgba(168,85,247,0.15);color:#c084fc;}
+.badge.completed{background:rgba(34,197,94,0.15);color:#22c55e;}
+
+/* BUTTONS */
+.accept-btn{width:100%;padding:13px;border:none;border-radius:13px;background:#ef4444;color:white;font-size:14px;font-weight:600;cursor:pointer;font-family:'Poppins',sans-serif;transition:opacity 0.2s;}
+.accept-btn:hover{opacity:0.85;}
+.accept-btn:disabled{opacity:0.5;cursor:not-allowed;}
+.status-btn{width:100%;padding:13px;border:none;border-radius:13px;color:white;font-size:14px;font-weight:600;cursor:pointer;font-family:'Poppins',sans-serif;transition:opacity 0.2s;}
+.status-btn.pb{background:#3b82f6;}
+.status-btn.db{background:#a855f7;}
+.status-btn.cb{background:#22c55e;}
+.status-btn:hover{opacity:0.85;}
+.status-btn:disabled{opacity:0.5;cursor:not-allowed;}
+
+/* EMPTY */
+.empty-state{text-align:center;padding:40px 20px;color:#64748b;}
+.empty-state .icon{font-size:2.5rem;margin-bottom:10px;}
+.empty-state p{font-size:14px;}
+
+/* BOTTOM NAV */
+.bottom-nav{position:fixed;bottom:0;left:0;width:100%;height:72px;background:#111827;display:flex;justify-content:space-around;align-items:center;border-top:1px solid #1e293b;z-index:1000;}
+.bottom-nav a{text-decoration:none;color:#94a3b8;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:12px;width:20%;transition:0.3s;}
+.bottom-nav a span{font-size:22px;margin-bottom:4px;}
+.bottom-nav a.active{color:#ef4444;}
+.bottom-nav a:hover{color:#ef4444;}
+
+/* TOAST */
+#toast{position:fixed;top:20px;left:50%;transform:translateX(-50%);background:#111827;color:white;padding:14px 22px;border-radius:14px;font-size:14px;z-index:99999;opacity:0;pointer-events:none;transition:all 0.4s;box-shadow:0 5px 20px rgba(0,0,0,0.4);white-space:nowrap;max-width:90vw;text-align:center;}
+#toast.show{opacity:1;top:40px;}
+#toast.success{border-left:5px solid #22c55e;}
+#toast.error{border-left:5px solid #ef4444;}
+#toast.info{border-left:5px solid #3b82f6;}
+
+@keyframes fadeIn{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
+ .title-row{display:flex;align-items:center;justify-content:center;position:relative;margin:15px 0;}
+.back-btn{position:absolute;left:0;background:#1e293b;border:none;color:white;padding:8px 12px;border-radius:10px;cursor:pointer;font-size:16px;}
+</style>
+</head>
+<body>
+
+<!-- HEADER — outside overlay, always visible -->
+<header>
+  <h1><span class="red">Madaklasht</span> Store</h1>
+</header>
+
+<main>
+
+  <!-- LOADING OVERLAY — inside main only, so header & footer stay visible -->
+  <div id="loadingOverlay">
+    <div class="sk-hero shimmer">
+      <div class="sk-line s" style="margin-bottom:16px;"></div>
+      <div class="sk-line" style="width:50%;height:20px;margin-bottom:12px;"></div>
+      <div class="sk-line"></div>
+      <div class="sk-line s"></div>
+    </div>
+    <div class="sk-stats">
+      <div class="sk-stat shimmer"></div>
+      <div class="sk-stat shimmer"></div>
+      <div class="sk-stat shimmer"></div>
+    </div>
+    <div class="sk-bar shimmer"></div>
+    <div class="sk-bar shimmer" style="margin-bottom:20px;"></div>
+    <div class="sk-card shimmer"><div class="sk-row"></div><div class="sk-row s"></div><div class="sk-btn"></div></div>
+    <div class="sk-card shimmer"><div class="sk-row"></div><div class="sk-row s"></div><div class="sk-btn"></div></div>
+  </div>
+
+  <!-- HERO -->
+  <div class="hero-card">
+   <!-- With this ABOVE .hero-card: -->
+<div class="title-row">
+  <button class="back-btn" onclick="window.location.href='account.html'">⬅</button>
+  <h2><span class="red">Earn</span> With Us</h2>
+</div>
+    
+    <p>Deliver our products to our customers and earn money for every successful delivery you complete.</p>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats">
+    <div class="stat-box"><h3 id="statJobs">0</h3><p>Jobs</p></div>
+    <div class="stat-box"><h3 id="statMyJobs">0</h3><p>My Jobs</p></div>
+    <div class="stat-box"><h3 id="statDone">0</h3><p>Completed</p></div>
+  </div>
+
+  <!-- LIVE -->
+  <div class="live-bar">
+    <div class="live-dot"></div>
+    <span class="live-text">Live Jobs</span>
+    <span class="live-sub" id="lastUpdated">Updating...</span>
+  </div>
+
+  <!-- TABS -->
+  <div class="filter-tabs">
+    <button class="tab-btn active" id="tabJobs" onclick="switchTab('jobs')">Jobs</button>
+    <button class="tab-btn" id="tabMyJobs" onclick="switchTab('myjobs')">My Jobs</button>
+    <button class="tab-btn" id="tabHistory" onclick="switchTab('history')">History</button>
+  </div>
+
+  <div id="jobsList"></div>
+  <div id="myJobsList" style="display:none;"></div>
+  <div id="historyList" style="display:none;"></div>
+
+</main>
+
+<!-- BOTTOM NAV — outside main, never covered by overlay -->
+<nav class="bottom-nav">
+  <a href="index.html"><span>🏠</span><p>Home</p></a>
+  <a href="products.html"><span>🛒</span><p>Shop</p></a>
+  <a href="news.html"><span>📰</span><p>News</p></a>
+  <a href="tourism.html"><span>🗺️</span><p>Tourism</p></a>
+  <a href="account.html"><span>👤</span><p>Account</p></a>
+</nav>
+
+<div id="toast"></div>
+
+<script>
+const API       = "https://script.google.com/macros/s/AKfycbzWmBxTn30d2dZoPIdfC0VE9cL-Mt6UtEn8eUTVuJJFMx-1vnh7NmfJsJO2_q0YIc0ZRA/exec";
+const userEmail = localStorage.getItem("userEmail");
+const userName  = localStorage.getItem("userName");
+
+if(!userEmail){ window.location.href = "account.html"; }
+
+let allJobs     = [];
+let myJobs      = [];
+let historyJobs = [];
+let autoTimer;
+
+/* TOAST */
+function showToast(msg, type){
+  const t = document.getElementById("toast");
+  t.innerText = msg;
+  t.className = "show " + (type || "info");
+  clearTimeout(t._t);
+  t._t = setTimeout(() => t.classList.remove("show"), 3000);
+}
+
+/* ANIMATE NUMBER */
+function animNum(id, target){
+  const el = document.getElementById(id);
+  let n = 0;
+  const step = Math.max(1, Math.ceil(target / 25));
+  const iv = setInterval(() => {
+    n = Math.min(n + step, target);
+    el.innerText = n;
+    if(n >= target) clearInterval(iv);
+  }, 35);
+}
+
+/* HIDE OVERLAY */
+function hideOverlay(){
+  const ov = document.getElementById("loadingOverlay");
+  ov.classList.add("hide");
+  setTimeout(() => ov.style.display = "none", 700);
+}
+
+/* TIMESTAMP */
+function stamp(){
+  const d = new Date();
+  const pad = n => String(n).padStart(2,"0");
+  document.getElementById("lastUpdated").innerText =
+    "Updated " + pad(d.getHours()) + ":" + pad(d.getMinutes()) + ":" + pad(d.getSeconds());
+}
+
+/* TAB */
+function switchTab(tab){
+  document.getElementById("tabJobs").classList.toggle("active", tab === "jobs");
+  document.getElementById("tabMyJobs").classList.toggle("active", tab === "myjobs");
+  document.getElementById("tabHistory").classList.toggle("active", tab === "history");
+  document.getElementById("jobsList").style.display    = tab === "jobs"    ? "block" : "none";
+  document.getElementById("myJobsList").style.display  = tab === "myjobs"  ? "block" : "none";
+  document.getElementById("historyList").style.display = tab === "history" ? "block" : "none";
+}
+
+/* FETCH ALL */
+async function fetchAll(first){
+  try{
+    await Promise.all([fetchJobs(), fetchMyJobs(), fetchHistory()]);
+    updateStats();
+    stamp();
+    if(first) hideOverlay();
+  }catch(e){
+    if(first) hideOverlay();
+    showToast("Network error", "error");
+  }
+}
+
+/* FETCH JOBS */
+async function fetchJobs(){
+  const res  = await fetch(API, {method:"POST", body: JSON.stringify({action:"getJobs"})});
+  const data = await res.json();
+  allJobs = Array.isArray(data) ? data : (data.jobs || []);
+  renderJobs();
+}
+
+/* RENDER JOBS */
+function renderJobs(){
+  const box   = document.getElementById("jobsList");
+  const avail = allJobs.filter(j => j.Status === "available");
+  if(!avail.length){
+    box.innerHTML = `<div class="empty-state"><div class="icon">📦</div><p>No jobs available right now</p></div>`;
+    return;
+  }
+  box.innerHTML = avail.map(j => `
+    <div class="job-card">
+      <div class="job-title">${j.JobTitle || "Delivery Job"}</div>
+      <div class="job-meta">
+        <span>📍 ${j.Area || "—"}</span>
+        <span class="reward">💰 ${j.Reward || "0"} PKR</span>
+      </div>
+      <button class="accept-btn" onclick="acceptJob('${j.JobID}', this)">Accept Job</button>
+    </div>
+  `).join("");
+}
+
+/* ACCEPT JOB */
+async function acceptJob(jobId, btn){
+  btn.disabled = true;
+  btn.innerText = "Accepting...";
+  try{
+    const res  = await fetch(API, {method:"POST", body: JSON.stringify({action:"acceptJob", jobId, email: userEmail, name: userName})});
+    const data = await res.json();
+    if(data.status === "success"){
+      showToast("Job Accepted!", "success");
+      switchTab("myjobs");
+      fetchAll(false);
+    } else {
+      showToast(data.message || "Could not accept job", "error");
+      btn.disabled = false;
+      btn.innerText = "Accept Job";
+    }
+  }catch(e){
+    showToast("Network error", "error");
+    btn.disabled = false;
+    btn.innerText = "Accept Job";
+  }
+}
+
+/* FETCH MY JOBS */
+async function fetchMyJobs(){
+  const res  = await fetch(API, {method:"POST", body: JSON.stringify({action:"getMyJobs", email: userEmail})});
+  const data = await res.json();
+  myJobs = Array.isArray(data) ? data : (data.jobs || []);
+  renderMyJobs();
+}
+
+/* FETCH HISTORY */
+async function fetchHistory(){
+  const res  = await fetch(API, {method:"POST", body: JSON.stringify({action:"getHistory", email: userEmail})});
+  const data = await res.json();
+  historyJobs = data.history || [];
+  renderHistory();
+}
+
+/* RENDER HISTORY */
+function renderHistory(){
+  const box = document.getElementById("historyList");
+  if(!historyJobs.length){
+    box.innerHTML = `<div class="empty-state"><div class="icon">🏆</div><p>No completed deliveries yet</p></div>`;
+    return;
+  }
+  box.innerHTML = historyJobs.map(j => `
+    <div class="my-job-card">
+      <div class="my-job-title">${j.JobTitle}</div>
+      <span class="badge completed">Completed</span>
+      <div class="detail-row"><span class="lbl">🆔 Job ID</span><span>${j.JobID}</span></div>
+      <div class="detail-row"><span class="lbl">💰 Reward</span><span style="color:#22c55e;font-weight:600;">${j.Reward} PKR</span></div>
+      <div class="detail-row"><span class="lbl">📅 Date</span><span>${j.CompletedAt}</span></div>
+    </div>
+  `).join("");
+}
+
+/* RENDER MY JOBS */
+function renderMyJobs(){
+  const box    = document.getElementById("myJobsList");
+  const active = myJobs.filter(j => j.Status !== "completed");
+  if(!active.length){
+    box.innerHTML = `<div class="empty-state"><div class="icon">🚚</div><p>You have no active deliveries</p></div>`;
+    return;
+  }
+  box.innerHTML = active.map(j => {
+    let btn = "";
+    if(j.Status === "assigned")
+      btn = `<button class="status-btn pb" onclick="doStatus('startProcessing','${j.JobID}',this)">Start Processing</button>`;
+    else if(j.Status === "processing")
+      btn = `<button class="status-btn db" onclick="doStatus('startDelivery','${j.JobID}',this)">Start Delivery</button>`;
+    else if(j.Status === "delivering")
+      btn = `<button class="status-btn cb" onclick="doStatus('completeDelivery','${j.JobID}',this)">Complete Delivery</button>`;
+    return `
+      <div class="my-job-card">
+        <div class="my-job-title">${j.JobTitle || "Delivery Job"}</div>
+        <span class="badge ${j.Status}">${cap(j.Status)}</span>
+        <div class="detail-row"><span class="lbl">👤 Customer</span><span>${j.CustomerName || "—"}</span></div>
+        <div class="detail-row"><span class="lbl">📞 Phone</span><span>${j.CustomerPhone || "—"}</span></div>
+        <div class="detail-row"><span class="lbl">📍 Address</span><span>${j.Address || "—"}</span></div>
+        <div class="detail-row"><span class="lbl">💰 Reward</span><span style="color:#22c55e;font-weight:600;">${j.Reward || "0"} PKR</span></div>
+        ${btn}
+      </div>
+    `;
+  }).join("");
+}
+
+/* STATUS UPDATE */
+async function doStatus(action, jobId, btn){
+  btn.disabled = true;
+  btn.innerText = "Updating...";
+  const body = {action, jobId};
+  if(action === "completeDelivery"){ body.email = userEmail; body.deliveryMan = userName; }
+  try{
+    const res  = await fetch(API, {method:"POST", body: JSON.stringify(body)});
+    const data = await res.json();
+    const msgs = {startProcessing:"Processing Started", startDelivery:"Delivery Started", completeDelivery:"Delivery Completed!"};
+    if(data.status === "success"){
+      showToast(msgs[action] || "Updated", "success");
+      fetchAll(false);
+    } else {
+      showToast(data.message || "Update failed", "error");
+      btn.disabled = false;
+    }
+  }catch(e){
+    showToast("Network error","error");
+    btn.disabled = false;
+  }
+}
+
+/* STATS */
+function updateStats(){
+  const avail  = allJobs.filter(j => j.Status === "available").length;
+  const active = myJobs.filter(j => ["assigned","processing","delivering"].includes(j.Status)).length;
+  const done   = historyJobs.length;
+  animNum("statJobs",   avail);
+  animNum("statMyJobs", active);
+  animNum("statDone",   done);
+}
+
+/* HELPERS */
+function cap(s){ return s ? s.charAt(0).toUpperCase() + s.slice(1) : ""; }
+
+/* INIT */
+window.onload = function(){
+  fetchAll(true);
+  autoTimer = setInterval(() => fetchAll(false), 10000);
+};
+</script>
+</body>
+</html>

@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Withdrawals - Madaklasht Store</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Poppins',sans-serif;background:#0f172a;color:white;padding-bottom:90px;}
+
+header{position:sticky;top:0;background:#111827;padding:15px;text-align:center;z-index:1000;box-shadow:0 2px 10px rgba(0,0,0,0.3);}
+header h1{font-size:1.6rem;}
+.red{color:#ef4444;}
+
+main{max-width:700px;margin:auto;padding:15px;position:relative;min-height:calc(100vh - 72px - 58px);}
+
+/* ── LOADING OVERLAY ── */
+#loadingOverlay{position:absolute;top:0;left:0;right:0;bottom:0;background:#0f172a;z-index:100;padding:15px;transition:opacity 0.6s ease;}
+#loadingOverlay.hide{opacity:0;pointer-events:none;}
+
+/* ── SKELETON ── */
+.sk-hero-card{background:#1e293b;border-radius:22px;padding:20px;margin-bottom:15px;position:relative;overflow:hidden;}
+.sk-form-card{background:#1e293b;border-radius:22px;padding:20px;margin-bottom:15px;position:relative;overflow:hidden;}
+.sk-filter-card{background:#1e293b;border-radius:22px;padding:16px;margin-bottom:15px;position:relative;overflow:hidden;}
+.sk-list-card{background:#1e293b;border-radius:22px;padding:18px;margin-bottom:15px;position:relative;overflow:hidden;}
+.sk-stat-row{display:flex;gap:10px;margin-top:14px;}
+.sk-stat{flex:1;height:72px;background:#0f172a;border-radius:14px;position:relative;overflow:hidden;}
+.sk-line{height:12px;background:#334155;border-radius:8px;margin:8px 0;}
+.sk-line.w80{width:80%;}
+.sk-line.w55{width:55%;}
+.sk-line.w65{width:65%;}
+.sk-amt-box{height:64px;background:#0f172a;border-radius:14px;margin:12px 0;position:relative;overflow:hidden;}
+.sk-wallet-row{display:flex;gap:10px;margin:12px 0;}
+.sk-wallet{flex:1;height:68px;background:#0f172a;border-radius:14px;position:relative;overflow:hidden;}
+.sk-input{height:52px;background:#0f172a;border-radius:14px;margin:10px 0;position:relative;overflow:hidden;}
+.sk-btn{height:50px;background:#334155;border-radius:14px;margin-top:4px;position:relative;overflow:hidden;}
+.sk-filter-row{display:flex;gap:8px;}
+.sk-pill{flex:1;height:34px;background:#334155;border-radius:12px;}
+.sk-card-inner{background:#0f172a;border-radius:14px;height:56px;margin:10px 0;position:relative;overflow:hidden;}
+.sk-row{height:13px;background:#334155;border-radius:8px;margin:9px 0;}
+
+.shimmer::after{content:"";position:absolute;top:0;left:-150%;width:150%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.07),transparent);animation:shimmer 1.3s infinite;}
+@keyframes shimmer{100%{left:150%;}}
+
+/* ── TITLE ROW ── */
+.title-row{display:flex;align-items:center;justify-content:center;position:relative;margin:15px 0;}
+.back-btn{position:absolute;left:0;background:#1e293b;border:none;color:white;padding:8px 12px;border-radius:10px;cursor:pointer;font-size:16px;}
+.title-row h2{font-size:18px;}
+
+/* ── HERO / STATS CARD ── */
+.hero-card{background:linear-gradient(135deg,#1e293b,#111827);border-radius:22px;padding:20px;margin-bottom:15px;box-shadow:0 5px 20px rgba(0,0,0,0.3);animation:fadeIn 0.4s ease;}
+.hero-card h3{font-size:16px;margin-bottom:6px;}
+.hero-card p{color:#94a3b8;font-size:13px;line-height:1.7;margin-bottom:16px;}
+.stats-row{display:flex;gap:10px;}
+.stat-box{flex:1;background:#0f172a;border-radius:14px;padding:12px 8px;text-align:center;}
+.stat-box h4{font-size:20px;font-weight:600;margin-bottom:4px;}
+.stat-box span{font-size:10px;color:#94a3b8;line-height:1.4;display:block;}
+.stat-box h4.clr-yellow{color:#facc15;}
+.stat-box h4.clr-green{color:#22c55e;}
+.stat-box h4.clr-purple{color:#a78bfa;}
+
+/* pulse while loading */
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.4;}}
+.stat-box h4.pulsing{animation:pulse 1.2s ease infinite;}
+
+/* ── FORM CARD ── */
+.form-card{background:#1e293b;border-radius:22px;padding:20px;margin-bottom:15px;box-shadow:0 5px 20px rgba(0,0,0,0.3);animation:fadeIn 0.4s ease;}
+.form-card-title{font-size:15px;font-weight:600;margin-bottom:4px;}
+.form-card-sub{font-size:12px;color:#94a3b8;margin-bottom:16px;}
+
+/* available balance box */
+.avail-box{background:#0f172a;border-radius:14px;padding:14px 16px;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center;}
+.avail-left .lbl{font-size:11px;color:#94a3b8;margin-bottom:4px;}
+.avail-left .amt-wrap{display:flex;align-items:baseline;gap:5px;}
+.avail-left .amt{font-size:22px;font-weight:600;color:#22c55e;}
+.avail-left .pkr{font-size:12px;color:#64748b;}
+.avail-right{font-size:30px;}
+
+/* wallet selector */
+.wallet-label{font-size:12px;color:#94a3b8;margin-bottom:8px;}
+.wallet-row{display:flex;gap:10px;margin-bottom:14px;}
+.wallet-opt{flex:1;background:#0f172a;border:2px solid transparent;border-radius:14px;padding:12px 8px;text-align:center;cursor:pointer;transition:border-color 0.2s,background 0.2s;}
+.wallet-opt:hover{border-color:#334155;}
+.wallet-opt.selected{border-color:#ef4444;background:rgba(239,68,68,0.08);}
+.wallet-opt .w-icon{font-size:22px;margin-bottom:4px;}
+.wallet-opt .w-name{font-size:12px;font-weight:600;}
+.wallet-opt .w-tag{font-size:10px;color:#64748b;margin-top:2px;}
+
+/* input */
+.field-label{font-size:12px;color:#94a3b8;margin-bottom:6px;}
+.field-input{width:100%;background:#0f172a;border:2px solid #1e3a5f;border-radius:14px;padding:14px 16px;color:white;font-size:14px;font-family:'Poppins',sans-serif;outline:none;transition:border-color 0.2s;margin-bottom:14px;}
+.field-input:focus{border-color:#ef4444;}
+.field-input::placeholder{color:#475569;}
+
+/* submit btn */
+.submit-btn{display:block;width:100%;background:#ef4444;color:white;border:none;border-radius:14px;padding:14px;font-size:14px;font-weight:600;font-family:'Poppins',sans-serif;cursor:pointer;transition:background 0.2s,opacity 0.2s;}
+.submit-btn:hover{background:#dc2626;}
+.submit-btn:disabled{opacity:0.5;cursor:not-allowed;}
+
+/* ── HISTORY CARD ── */
+.history-card{background:#1e293b;border-radius:22px;overflow:hidden;margin-bottom:15px;box-shadow:0 5px 20px rgba(0,0,0,0.3);animation:fadeIn 0.4s ease;}
+
+/* filter tabs inside history card */
+.tab-row{display:flex;border-bottom:1px solid #0f172a;}
+.tab-btn{flex:1;padding:13px 8px;background:none;border:none;color:#94a3b8;font-size:12px;font-family:'Poppins',sans-serif;cursor:pointer;font-weight:500;border-bottom:2px solid transparent;transition:color 0.2s,border-color 0.2s;}
+.tab-btn.active{color:#ef4444;border-bottom-color:#ef4444;}
+
+.history-body{padding:16px;}
+
+/* each withdrawal row */
+.w-item{background:#0f172a;border-radius:16px;padding:14px;margin-bottom:12px;animation:fadeIn 0.3s ease;}
+.w-item:last-child{margin-bottom:0;}
+.w-item-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+.w-item-left .w-method{font-size:13px;font-weight:600;}
+.w-item-left .w-date{font-size:11px;color:#64748b;margin-top:2px;}
+.w-item-right{text-align:right;}
+.w-item-right .w-amount{font-size:15px;font-weight:600;color:#22c55e;}
+.w-item-right .w-id{font-size:10px;color:#64748b;margin-top:2px;}
+
+.w-item-meta{display:flex;justify-content:space-between;align-items:center;}
+.w-item-meta .w-account{font-size:11px;color:#94a3b8;}
+
+/* status badge */
+.status-badge{display:inline-block;padding:4px 12px;border-radius:10px;font-size:11px;font-weight:600;}
+.status-badge.processing{background:rgba(250,204,21,0.15);color:#facc15;}
+.status-badge.proceed{background:rgba(59,130,246,0.15);color:#3b82f6;}
+.status-badge.completed{background:rgba(34,197,94,0.15);color:#22c55e;}
+.status-badge.rejected{background:rgba(239,68,68,0.15);color:#ef4444;}
+
+/* step tracker */
+.step-track{margin-top:12px;padding-top:12px;border-top:1px solid #1e293b;}
+.track-bar{display:flex;align-items:center;margin-bottom:4px;}
+.track-dot{width:16px;height:16px;border-radius:50%;background:#334155;display:flex;align-items:center;justify-content:center;font-size:8px;position:relative;z-index:1;flex-shrink:0;}
+.track-dot.done{background:#22c55e;}
+.track-dot.active{background:#ef4444;box-shadow:0 0 0 3px rgba(239,68,68,0.2);}
+.track-line{flex:1;height:2px;background:#334155;margin-top:0;}
+.track-line.done{background:#22c55e;}
+.track-labels{display:flex;margin-top:5px;}
+.track-label{flex:1;font-size:9px;color:#64748b;text-align:center;}
+.track-label.done{color:#22c55e;}
+.track-label.active{color:#ef4444;}
+
+/* empty & toast */
+.empty-state{text-align:center;padding:30px 20px;color:#64748b;font-size:13px;}
+.empty-state .icon{font-size:2rem;margin-bottom:8px;}
+.toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);background:#22c55e;color:white;padding:12px 24px;border-radius:14px;font-size:13px;font-weight:600;z-index:9999;opacity:0;transition:opacity 0.3s,transform 0.3s;pointer-events:none;white-space:nowrap;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+
+/* ── BOTTOM NAV ── */
+.bottom-nav{position:fixed;bottom:0;left:0;width:100%;height:72px;background:#111827;display:flex;justify-content:space-around;align-items:center;border-top:1px solid #1e293b;z-index:1000;}
+.bottom-nav a{text-decoration:none;color:#94a3b8;display:flex;flex-direction:column;align-items:center;font-size:12px;}
+.bottom-nav a span{font-size:22px;margin-bottom:4px;}
+.bottom-nav a.active{color:#ef4444;}
+</style>
+</head>
+<body>
+
+<header>
+  <h1><span class="red">Madaklasht</span> Store</h1>
+</header>
+
+<div class="toast" id="toast"></div>
+
+<main>
+
+  <!-- ══════════════ SHIMMER OVERLAY ══════════════ -->
+  <div id="loadingOverlay">
+
+    <!-- title skeleton -->
+    <div style="display:flex;align-items:center;justify-content:center;position:relative;margin:15px 0;">
+      <div style="position:absolute;left:0;width:44px;height:36px;background:#1e293b;border-radius:10px;"></div>
+      <div style="height:18px;width:160px;background:#334155;border-radius:8px;"></div>
+    </div>
+
+    <!-- hero card skeleton -->
+    <div class="sk-hero-card shimmer">
+      <div class="sk-line w55"></div>
+      <div class="sk-line w80"></div>
+      <div class="sk-line w65" style="margin-bottom:14px;"></div>
+      <div class="sk-stat-row">
+        <div class="sk-stat shimmer"></div>
+        <div class="sk-stat shimmer"></div>
+        <div class="sk-stat shimmer"></div>
+      </div>
+    </div>
+
+    <!-- form card skeleton -->
+    <div class="sk-form-card shimmer">
+      <div class="sk-line w55"></div>
+      <div class="sk-line w80" style="margin-bottom:14px;"></div>
+      <div class="sk-amt-box shimmer"></div>
+      <div class="sk-wallet-row">
+        <div class="sk-wallet shimmer"></div>
+        <div class="sk-wallet shimmer"></div>
+      </div>
+      <div class="sk-input shimmer"></div>
+      <div class="sk-btn shimmer"></div>
+    </div>
+
+    <!-- history card skeleton -->
+    <div class="sk-filter-card shimmer">
+      <div class="sk-filter-row" style="margin-bottom:16px;">
+        <div class="sk-pill"></div>
+        <div class="sk-pill"></div>
+        <div class="sk-pill"></div>
+      </div>
+      <div class="sk-card-inner shimmer"></div>
+      <div class="sk-row" style="width:70%;"></div>
+      <div class="sk-row" style="width:50%;"></div>
+      <div class="sk-card-inner shimmer"></div>
+      <div class="sk-row" style="width:70%;"></div>
+    </div>
+
+  </div>
+  <!-- END SHIMMER -->
+
+
+  <!-- ══════════════ REAL CONTENT ══════════════ -->
+  <div id="pageContent" style="display:none;">
+
+    <div class="title-row">
+      <button class="back-btn" onclick="goBack()">⬅</button>
+      <h2>💸 My Withdrawals</h2>
+    </div>
+
+    <!-- ── CARD 1: STATS ── -->
+    <div class="hero-card">
+      <h3>Your Earnings Overview</h3>
+      <p>Track your total earned balance, pending withdrawals, and successfully processed payments.</p>
+      <div class="stats-row">
+        <div class="stat-box">
+          <h4 class="clr-yellow pulsing" id="statProcessing">0</h4>
+          <span>Processing</span>
+        </div>
+        <div class="stat-box">
+          <h4 class="clr-green pulsing" id="statCompleted">0</h4>
+          <span>Completed</span>
+        </div>
+        <div class="stat-box">
+          <h4 class="clr-purple pulsing" id="statHistory">0</h4>
+          <span>History</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── CARD 2: REQUEST FORM ── -->
+    <div class="form-card">
+      <div class="form-card-title">Request Withdrawal</div>
+      <div class="form-card-sub">Fill in the details below to submit your withdrawal request.</div>
+
+      <!-- available balance — loads from API -->
+      <div class="avail-box">
+        <div class="avail-left">
+          <div class="lbl">Available to Withdraw</div>
+          <div class="amt-wrap">
+            <span class="amt pulsing" id="availableAmt">0</span>
+            <span class="pkr">PKR</span>
+          </div>
+        </div>
+        <div class="avail-right">💰</div>
+      </div>
+
+      <!-- wallet -->
+      <div class="wallet-label">Select Wallet</div>
+      <div class="wallet-row">
+        <div class="wallet-opt selected" id="walletEasypaisa" onclick="selectWallet('Easypaisa')">
+          <div class="w-icon">🟢</div>
+          <div class="w-name">Easypaisa</div>
+          <div class="w-tag">Mobile Wallet</div>
+        </div>
+        <div class="wallet-opt" id="walletJazzcash" onclick="selectWallet('Jazzcash')">
+          <div class="w-icon">🔴</div>
+          <div class="w-name">JazzCash</div>
+          <div class="w-tag">Mobile Wallet</div>
+        </div>
+      </div>
+
+      <!-- account number -->
+      <div class="field-label">Account Number / Phone</div>
+      <input class="field-input" type="tel" id="accountInput" placeholder="e.g. 03001234567" maxlength="11">
+   
+      <div class="field-label">Withdrawal Amount (PKR)</div>
+<input
+  class="field-input"
+  type="number"
+  id="amountInput"
+  placeholder="Enter amount"
+  min="100">
+
+      <button class="submit-btn" id="submitBtn" onclick="submitWithdrawal()">
+        💸 Request Withdrawal
+      </button>
+    </div>
+
+    <!-- ── CARD 3: HISTORY WITH FILTER TABS ── -->
+    <div class="history-card">
+      <div class="tab-row">
+        <button class="tab-btn active" onclick="switchTab('Processing', this)">⏳ Processing</button>
+        <button class="tab-btn"        onclick="switchTab('Completed',  this)">✅ Completed</button>
+        <button class="tab-btn"        onclick="switchTab('history',    this)">📋 History</button>
+      </div>
+      <div class="history-body" id="historyBody">
+        <div class="empty-state"><div class="icon">💸</div><p>Loading...</p></div>
+      </div>
+    </div>
+
+  </div>
+  <!-- END REAL CONTENT -->
+
+</main>
+
+<nav class="bottom-nav">
+  <a href="index.html"><span>🏠</span><p>Home</p></a>
+  <a href="products.html"><span>🛒</span><p>Shop</p></a>
+  <a href="news.html"><span>📰</span><p>News</p></a>
+  <a href="tourism.html"><span>🗺️</span><p>Tourism</p></a>
+  <a href="account.html"><span>👤</span><p>Account</p></a>
+</nav>
+
+<script>
+const API = "https://script.google.com/macros/s/AKfycbzWmBxTn30d2dZoPIdfC0VE9cL-Mt6UtEn8eUTVuJJFMx-1vnh7NmfJsJO2_q0YIc0ZRA/exec";
+
+let allWithdrawals = [];
+let currentTab     = "Processing";
+let selectedWallet = "Easypaisa";
+let earnedBalance  = 0;
+
+function goBack(){ window.location.href = "account.html"; }
+
+/* ── Show real content ── */
+function showContent(){
+  const ov = document.getElementById("loadingOverlay");
+  ov.classList.add("hide");
+  setTimeout(() => ov.style.display = "none", 700);
+  document.getElementById("pageContent").style.display = "block";
+}
+
+/* ── Stop pulsing on an element ── */
+function stopPulse(id){
+  document.getElementById(id).classList.remove("pulsing");
+}
+
+/* ── Animated counter (0 → target) ── */
+function animNum(id, target, isAmount){
+  stopPulse(id);
+  const el   = document.getElementById(id);
+  let n      = 0;
+  const step = Math.max(1, Math.ceil(target / 25));
+  const iv   = setInterval(() => {
+    n = Math.min(n + step, target);
+    el.innerText = isAmount ? n.toLocaleString() : n;
+    if(n >= target) clearInterval(iv);
+  }, 40);
+}
+
+/* ── Toast ── */
+function showToast(msg, color){
+  const t = document.getElementById("toast");
+  t.textContent  = msg;
+  t.style.background = color || "#22c55e";
+  t.classList.add("show");
+  setTimeout(() => t.classList.remove("show"), 3000);
+}
+
+/* ── Wallet select ── */
+function selectWallet(name){
+  selectedWallet = name;
+  document.getElementById("walletEasypaisa").classList.toggle("selected", name === "Easypaisa");
+  document.getElementById("walletJazzcash").classList.toggle("selected",  name === "Jazzcash");
+}
+
+/* ── Update stat counters after data loads ── */
+function updateStats(){
+  const processing = allWithdrawals.filter(w => w.status === "Processing").length;
+  const completed  = allWithdrawals.filter(w => w.status === "Completed").length;
+  const history    = allWithdrawals.filter(w =>
+    w.status === "Completed" || w.status === "Rejected"
+  ).length;
+
+  animNum("statProcessing", processing, false);
+  animNum("statCompleted",  completed,  false);
+  animNum("statHistory",    history,    false);
+}
+
+/* ── Step tracker HTML ── */
+function stepTrack(status){
+  const s = (status || "").toLowerCase();
+  if(s === "rejected"){
+    return `<div class="step-track" style="display:flex;align-items:center;gap:8px;font-size:12px;color:#ef4444;border-top:1px solid #1e293b;margin-top:12px;padding-top:12px;">
+      ❌ <span>This request was rejected</span></div>`;
+  }
+  const steps   = ["Submitted","Processing","Proceed","Completed"];
+  const stepMap = {submitted:0, processing:1, proceed:2, completed:3};
+  const cur     = stepMap[s] ?? 1;
+  let dots = "", labels = "";
+  steps.forEach((st, i) => {
+    const cls = i < cur ? "done" : i === cur ? "active" : "";
+    dots   += `<div class="track-dot ${cls}">${i < cur ? "✓" : ""}</div>`;
+    if(i < steps.length - 1)
+      dots += `<div class="track-line ${i < cur ? "done" : ""}"></div>`;
+    labels += `<div class="track-label ${i < cur?"done": i===cur?"active":""}">${st}</div>`;
+  });
+  return `<div class="step-track">
+    <div class="track-bar">${dots}</div>
+    <div class="track-labels">${labels}</div>
+  </div>`;
+}
+
+/* ── Render the history tab body ── */
+function renderHistory(){
+  const body = document.getElementById("historyBody");
+
+  let list;
+  if(currentTab === "history"){
+    list = allWithdrawals.filter(w => w.status === "Completed" || w.status === "Rejected");
+  } else {
+    list = allWithdrawals.filter(w => w.status === currentTab);
+  }
+
+  if(!list.length){
+    body.innerHTML = `<div class="empty-state"><div class="icon">💸</div><p>No ${currentTab.toLowerCase()} requests</p></div>`;
+    return;
+  }
+
+  body.innerHTML = list.map((w, idx) => {
+    const status   = w.status || "Processing";
+    const badgeCls = status.toLowerCase();
+    const method   = w.method  || "—";
+    const account  = w.account || "—";
+    const date     = w.date ? w.date.split("T")[0] : "—";
+    const time     = w.date ? w.date.split("T")[1]?.slice(0,5) || "" : "";
+    const id       = w.id || ("WD" + String(idx + 1).padStart(4,"0"));
+    const amount   = parseFloat(w.amount || 0).toLocaleString();
+
+    return `
+      <div class="w-item">
+        <div class="w-item-top">
+          <div class="w-item-left">
+            <div class="w-method">${method}</div>
+            <div class="w-date">${date}${time ? " · " + time : ""}</div>
+          </div>
+          <div class="w-item-right">
+            <div class="w-amount">${amount} PKR</div>
+            <div class="w-id">${id}</div>
+          </div>
+        </div>
+        <div class="w-item-meta">
+          <span class="w-account">📱 ${account}</span>
+          <span class="status-badge ${badgeCls}">${status}</span>
+        </div>
+        ${stepTrack(status)}
+      </div>`;
+  }).join("");
+}
+
+/* ── Switch tab ── */
+function switchTab(tab, btn){
+  currentTab = tab;
+  document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+  btn.classList.add("active");
+  renderHistory();
+}
+
+/* ── Load everything ── */
+async function loadAll(){
+  const email = localStorage.getItem("userEmail");
+  if(!email){ showContent(); return; }
+
+  // both calls in parallel
+  await Promise.all([
+
+    // 1. Dashboard API → earned balance
+    (async () => {
+      try{
+        const res  = await fetch(API, {
+          method: "POST",
+          body: JSON.stringify({ action: "getDashboard", email })
+        });
+        const data = await res.json();
+        if(data.status === "success"){
+          // ⚠️ Change field name below to match your dashboard API response
+          earnedBalance =
+  parseFloat(data.availableBalance || 0);
+        }
+      }catch(e){}
+      animNum("availableAmt", Math.round(earnedBalance), true);
+    })(),
+
+    // 2. Withdrawals sheet
+    (async () => {
+      try{
+        const res  = await fetch(API, {
+          method: "POST",
+          body: JSON.stringify({ action: "getUserWithdrawals", email })
+        });
+        const data = await res.json();
+        if(data.status === "success") allWithdrawals = data.withdrawals || [];
+      }catch(e){}
+    })()
+
+  ]);
+
+  updateStats();
+  renderHistory();
+  showContent();
+}
+
+/* ── Submit withdrawal ── */
+async function submitWithdrawal(){
+
+  const account = document.getElementById("accountInput").value.trim();
+  const amount = parseFloat(document.getElementById("amountInput").value);
+
+  if(!account || account.length < 10){
+    showToast("Please enter a valid account number","#ef4444");
+    return;
+  }
+
+  if(!amount || amount <= 0){
+    showToast("Enter withdrawal amount","#ef4444");
+    return;
+  }
+
+  if(amount > earnedBalance){
+    showToast("Insufficient balance","#ef4444");
+    return;
+  }
+
+  const email = localStorage.getItem("userEmail");
+
+  const btn = document.getElementById("submitBtn");
+
+  btn.disabled = true;
+  btn.textContent = "Submitting...";
+
+  try{
+
+    const res = await fetch(API,{
+      method:"POST",
+      body:JSON.stringify({
+        action:"requestWithdrawal",
+        email,
+        amount,
+        method:selectedWallet,
+        account
+      })
+    });
+
+    const data = await res.json();
+
+    if(data.status==="success"){
+
+      showToast("Withdrawal request submitted");
+
+      document.getElementById("accountInput").value="";
+      document.getElementById("amountInput").value="";
+
+      await loadAll();
+
+    }else{
+      showToast(data.message || "Error","#ef4444");
+    }
+
+  }catch(err){
+    showToast("Network Error","#ef4444");
+  }
+
+  btn.disabled = false;
+  btn.textContent = "💸 Request Withdrawal";
+}
+
+window.onload = loadAll;
+</script>
+</body>
+</html>

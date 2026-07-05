@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>News - Madaklasht Store</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+body{
+  font-family:'Poppins',sans-serif;
+  background:
+    radial-gradient(circle at top left, rgba(239,68,68,0.16), transparent 32%),
+    linear-gradient(180deg,#0f172a,#020617);
+  color:white;
+  padding-bottom:90px;
+  min-height:100vh;
+}
+
+header{
+  position:sticky;
+  top:0;
+  background:rgba(17,24,39,0.92);
+  backdrop-filter:blur(16px);
+  padding:15px;
+  text-align:center;
+  z-index:1000;
+  box-shadow:0 2px 14px rgba(0,0,0,0.35);
+  border-bottom:1px solid rgba(255,255,255,0.06);
+}
+
+header h1{
+  font-size:1.7rem;
+}
+
+.red{
+  color:#ef4444;
+}
+
+main{
+  padding:15px;
+  max-width:700px;
+  margin:auto;
+}
+
+.news-hero{
+  background:linear-gradient(135deg,#1e293b,#111827);
+  border-radius:22px;
+  padding:24px;
+  text-align:center;
+  margin-bottom:18px;
+  box-shadow:0 8px 28px rgba(0,0,0,0.35);
+  border:1px solid rgba(255,255,255,0.06);
+}
+
+.news-hero h2{
+  font-size:2rem;
+  margin-bottom:8px;
+}
+
+.news-hero p{
+  color:#cbd5e1;
+  font-size:15px;
+  line-height:1.7;
+}
+
+/* GLASS FILTER */
+.filter-bar{
+  display:flex;
+  gap:10px;
+  width:100%;
+  padding:12px;
+  margin-bottom:20px;
+  overflow-x:auto;
+  overflow-y:hidden;
+  -webkit-overflow-scrolling:touch;
+  scrollbar-width:none;
+
+  background:rgba(15,23,42,0.62);
+  backdrop-filter:blur(18px);
+  border:1px solid rgba(255,255,255,0.12);
+  border-radius:18px;
+  box-shadow:
+    0 10px 30px rgba(0,0,0,0.28),
+    inset 0 1px 0 rgba(255,255,255,0.08);
+}
+
+.filter-bar::-webkit-scrollbar{
+  display:none;
+}
+
+.filter-btn{
+  flex:0 0 auto;
+  white-space:nowrap;
+  border:1px solid rgba(255,255,255,0.08);
+  background:rgba(30,41,59,0.72);
+  color:#e5e7eb;
+  padding:9px 15px;
+  border-radius:999px;
+  font-size:13px;
+  font-weight:600;
+  cursor:pointer;
+  transition:0.25s ease;
+}
+
+.filter-btn:hover{
+  background:rgba(51,65,85,0.95);
+  transform:translateY(-1px);
+}
+
+.filter-btn.active{
+  background:linear-gradient(135deg,#ef4444,#f97316);
+  color:white;
+  border-color:rgba(255,255,255,0.18);
+  box-shadow:0 8px 18px rgba(239,68,68,0.28);
+}
+
+/* NEWS CARD */
+.card{
+  background:rgba(30,41,59,0.95);
+  border-radius:20px;
+  overflow:hidden;
+  margin-bottom:18px;
+  box-shadow:0 8px 24px rgba(0,0,0,0.32);
+  border:1px solid rgba(255,255,255,0.06);
+  animation:fadeIn .4s ease;
+}
+
+.card img{
+  width:100%;
+  height:220px;
+  object-fit:cover;
+  display:block;
+  background:#334155;
+}
+
+.card-content{
+  padding:15px;
+}
+
+.card-meta{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  margin-bottom:12px;
+}
+
+.category-badge{
+  background:rgba(239,68,68,0.14);
+  color:#fecaca;
+  border:1px solid rgba(239,68,68,0.28);
+  padding:6px 12px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:700;
+}
+
+.news-date{
+  color:#94a3b8;
+  font-size:12px;
+  white-space:nowrap;
+}
+
+.card-content h3{
+  font-size:18px;
+  line-height:1.35;
+  margin-bottom:9px;
+  color:#f8fafc;
+  word-break:break-word;
+}
+
+.news-desc{
+  color:#cbd5e1;
+  font-size:14px;
+  line-height:1.7;
+  white-space:pre-line;
+  word-break:break-word;
+
+  display:-webkit-box;
+  -webkit-line-clamp:3;
+  -webkit-box-orient:vertical;
+  overflow:hidden;
+}
+
+.news-desc.expanded{
+  display:block;
+  overflow:visible;
+}
+
+.read-more{
+  color:#f87171;
+  font-size:13px;
+  font-weight:700;
+  cursor:pointer;
+  display:inline-block;
+  margin-top:10px;
+}
+
+.read-more:hover{
+  color:#fb923c;
+}
+
+.empty-message{
+  text-align:center;
+  color:#cbd5e1;
+  padding:20px;
+}
+
+/* SKELETON LOADING */
+.skeleton-card{
+  background:#1e293b;
+  border-radius:20px;
+  overflow:hidden;
+  margin-bottom:18px;
+  border:1px solid rgba(255,255,255,0.06);
+}
+
+.skeleton-img,
+.skeleton-line{
+  background:linear-gradient(90deg,#334155 0%,#475569 50%,#334155 100%);
+  background-size:200% 100%;
+  animation:shimmer 1.3s infinite linear;
+}
+
+.skeleton-img{
+  height:220px;
+}
+
+.skeleton-content{
+  padding:15px;
+}
+
+.skeleton-line{
+  height:12px;
+  border-radius:8px;
+  margin-bottom:10px;
+}
+
+.skeleton-line.short{
+  width:60%;
+}
+
+/* NAV */
+.bottom-nav{
+  position:fixed;
+  bottom:0;
+  left:0;
+  width:100%;
+  height:72px;
+  background:rgba(17,24,39,0.95);
+  backdrop-filter:blur(16px);
+  display:flex;
+  justify-content:space-around;
+  align-items:center;
+  border-top:1px solid rgba(255,255,255,0.08);
+  z-index:1000;
+}
+
+.bottom-nav a{
+  text-decoration:none;
+  color:#94a3b8;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  font-size:12px;
+  width:20%;
+  transition:.3s;
+}
+
+.bottom-nav a span{
+  font-size:22px;
+  margin-bottom:4px;
+}
+
+.bottom-nav a.active,
+.bottom-nav a:hover{
+  color:#ef4444;
+}
+
+@keyframes fadeIn{
+  from{opacity:0; transform:translateY(10px);}
+  to{opacity:1; transform:translateY(0);}
+}
+
+@keyframes shimmer{
+  from{background-position:200% 0;}
+  to{background-position:-200% 0;}
+}
+
+@media(max-width:420px){
+  .news-hero h2{
+    font-size:1.7rem;
+  }
+
+  .card img{
+    height:190px;
+  }
+
+  .card-content h3{
+    font-size:16px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1><span class="red">Madaklasht</span> Store</h1>
+</header>
+
+<main>
+
+<div class="news-hero">
+  <h2>Latest News</h2>
+  <p>Stay updated with Madaklasht news</p>
+</div>
+
+<div class="filter-bar">
+  <button type="button" class="filter-btn active" onclick="filterNews('All', this)">All</button>
+  <button type="button" class="filter-btn" onclick="filterNews('Weather', this)">Weather</button>
+  <button type="button" class="filter-btn" onclick="filterNews('Business', this)">Business</button>
+  <button type="button" class="filter-btn" onclick="filterNews('Education', this)">Education</button>
+  <button type="button" class="filter-btn" onclick="filterNews('Sports', this)">Sports</button>
+  <button type="button" class="filter-btn" onclick="filterNews('Health', this)">Health</button>
+</div>
+
+<div id="newsContainer">
+  <div class="skeleton-card">
+    <div class="skeleton-img"></div>
+    <div class="skeleton-content">
+      <div class="skeleton-line"></div>
+      <div class="skeleton-line short"></div>
+    </div>
+  </div>
+
+  <div class="skeleton-card">
+    <div class="skeleton-img"></div>
+    <div class="skeleton-content">
+      <div class="skeleton-line"></div>
+      <div class="skeleton-line short"></div>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<!-- NAV -->
+<nav class="bottom-nav">
+
+<a href="index.html">
+  <span>🏠</span>
+  <p>Home</p>
+</a>
+
+<a href="products.html">
+  <span>🛒</span>
+  <p>Shop</p>
+</a>
+
+<a href="news.html">
+  <span>📰</span>
+  <p>News</p>
+</a>
+
+<a href="tourism.html" class="active">
+  <span>🗺️</span>
+  <p>Tourism</p>
+</a>
+
+<a href="account.html">
+  <span>👤</span>
+  <p>Account</p>
+</a>
+
+</nav>
+
+<script>
+const API =
+"https://script.google.com/macros/s/AKfycbzRoJjmCgy--dsVAz8_TXu4CxiXiGGQ0GKTE6ufxN2Ctq8BceL1djQfp4N8vg65Jg0SaA/exec";
+
+let allNews = [];
+
+function escapeHTML(value){
+  return String(value || "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
+function toggleNews(btn){
+  const desc = btn.previousElementSibling;
+
+  if(desc.classList.contains("expanded")){
+    desc.classList.remove("expanded");
+    btn.innerText = "Read More";
+  }else{
+    desc.classList.add("expanded");
+    btn.innerText = "Show Less";
+  }
+}
+
+function renderNews(newsList){
+  const box = document.getElementById("newsContainer");
+  box.innerHTML = "";
+
+  if(!newsList || newsList.length === 0){
+    box.innerHTML = "<p class='empty-message'>No news found</p>";
+    return;
+  }
+
+  box.innerHTML = newsList.map(item => {
+    const title = escapeHTML(item.title || "Untitled News");
+    const category = escapeHTML(item.category || "News");
+    const date = escapeHTML(item.date || "");
+    const description = escapeHTML(item.description || "");
+    const image = escapeHTML(item.image || "");
+
+    const readMore =
+      description.length > 140
+      ? `<span class="read-more" onclick="toggleNews(this)">Read More</span>`
+      : "";
+
+    return `
+      <div class="card">
+        <img src="${image}" alt="${title}" onerror="this.style.display='none'">
+
+        <div class="card-content">
+          <div class="card-meta">
+            <div class="category-badge">${category}</div>
+            <div class="news-date">${date}</div>
+          </div>
+
+          <h3>${title}</h3>
+
+          <p class="news-desc">${description}</p>
+
+          ${readMore}
+        </div>
+      </div>
+    `;
+  }).join("");
+}
+
+function filterNews(category, btn){
+  document.querySelectorAll(".filter-btn").forEach(button => {
+    button.classList.remove("active");
+  });
+
+  btn.classList.add("active");
+
+  if(category === "All"){
+    renderNews(allNews);
+    return;
+  }
+
+  const selectedCategory = category.toLowerCase();
+
+  const filtered = allNews.filter(item =>
+    String(item.category || "").toLowerCase() === selectedCategory
+  );
+
+  renderNews(filtered);
+}
+
+async function loadNews(){
+  try{
+    const res = await fetch(API + "?type=news");
+    const data = await res.json();
+
+    allNews = Array.isArray(data) ? data : [];
+    renderNews(allNews);
+
+  }catch(err){
+    document.getElementById("newsContainer").innerHTML =
+    "<p class='empty-message'>Failed to load news</p>";
+  }
+}
+
+loadNews();
+</script>
+
+</body>
+</html>

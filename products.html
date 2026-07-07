@@ -6,7 +6,7 @@
 
 <title>Products - Madaklasht Store</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
 <style>
 *{
@@ -28,13 +28,15 @@ body{
 header{
   position:sticky;
   top:0;
-  background:rgba(17,24,39,0.92);
-  backdrop-filter:blur(16px);
+  width:100%;
+  background:#111827;
   padding:15px;
-  text-align:center;
   z-index:1000;
   box-shadow:0 2px 14px rgba(0,0,0,0.35);
   border-bottom:1px solid rgba(255,255,255,0.06);
+  display:flex;
+  align-items:center;
+  justify-content:center;
 }
 
 header h1{
@@ -142,37 +144,56 @@ main{
   box-shadow:0 8px 18px rgba(239,68,68,0.28);
 }
 
-/* PRODUCTS */
+/* PRODUCTS GRID */
 .products-grid{
   display:grid;
   grid-template-columns:repeat(2, 1fr);
-  gap:12px;
+  gap:14px;
 }
 
+/* PRODUCT CARD */
 .product-card{
   background:rgba(30,41,59,0.95);
-  border-radius:18px;
+  border-radius:20px;
   overflow:hidden;
   box-shadow:0 8px 24px rgba(0,0,0,0.32);
   border:1px solid rgba(255,255,255,0.06);
   animation:fadeIn .4s ease;
+  display:flex;
+  flex-direction:column;
+  transition:transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+  cursor:pointer;
+}
+
+.product-card:hover{
+  transform:translateY(-5px);
+  box-shadow:0 16px 34px rgba(0,0,0,0.45);
+  border-color:rgba(239,68,68,0.25);
+}
+
+.product-image-wrap{
+  padding:10px 10px 0 10px;
 }
 
 .product-card img{
   width:100%;
-  height:135px;
+  height:190px;
   object-fit:cover;
   display:block;
   background:#334155;
+  border-radius:14px;
 }
 
 .product-content{
-  padding:11px;
+  padding:14px;
+  display:flex;
+  flex-direction:column;
+  flex:1;
 }
 
 .product-content h3{
   color:#f8fafc;
-  font-size:14px;
+  font-size:14.5px;
   line-height:1.35;
   margin-bottom:6px;
   word-break:break-word;
@@ -187,49 +208,88 @@ main{
   -webkit-box-orient:vertical;
   overflow:hidden;
   word-break:break-word;
-}
-
-.product-bottom{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:8px;
-  margin-top:10px;
-}
-
-.product-category{
-  color:#fecaca;
-  background:rgba(239,68,68,0.14);
-  border:1px solid rgba(239,68,68,0.28);
-  border-radius:999px;
-  padding:5px 9px;
-  font-size:11px;
-  font-weight:700;
-  overflow:hidden;
-  text-overflow:ellipsis;
-  white-space:nowrap;
+  margin-bottom:10px;
 }
 
 .product-price{
   color:#22c55e;
-  font-size:13px;
+  font-size:19px;
+  font-weight:800;
+  margin-bottom:12px;
+}
+
+/* Add to cart button */
+.add-to-cart-btn{
+  width:100%;
+  border:none;
+  outline:none;
+  cursor:pointer;
+  background:linear-gradient(135deg,#ef4444,#f97316);
+  color:white;
+  font-family:'Poppins',sans-serif;
+  font-size:13.5px;
   font-weight:700;
-  white-space:nowrap;
+  padding:12px 10px;
+  border-radius:12px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:7px;
+  margin-top:auto;
+  box-shadow:0 6px 16px rgba(239,68,68,0.28);
+  transition:transform .15s ease, box-shadow .15s ease, filter .15s ease;
+}
+
+.add-to-cart-btn:hover{
+  transform:translateY(-2px);
+  box-shadow:0 10px 22px rgba(239,68,68,0.42);
+  filter:brightness(1.06);
+}
+
+.add-to-cart-btn:active{
+  transform:translateY(0) scale(.96);
+  box-shadow:0 4px 10px rgba(239,68,68,0.35);
+}
+
+.add-to-cart-btn:disabled{
+  opacity:.5;
+  cursor:not-allowed;
+  transform:none !important;
 }
 
 .empty-message{
   grid-column:1 / -1;
   text-align:center;
   color:#cbd5e1;
-  padding:24px 10px;
+  padding:44px 10px;
+}
+
+.empty-message .empty-icon{
+  font-size:46px;
+  display:block;
+  margin-bottom:10px;
+  opacity:.7;
+}
+
+.empty-message .empty-title{
+  font-size:15px;
+  font-weight:700;
+  color:#f8fafc;
+  margin-bottom:4px;
+}
+
+.empty-message .empty-sub{
+  font-size:13px;
+  color:#94a3b8;
 }
 
 /* SKELETON */
 .skeleton-card{
   background:#1e293b;
-  border-radius:18px;
+  border-radius:20px;
   overflow:hidden;
   border:1px solid rgba(255,255,255,0.06);
+  padding:10px;
 }
 
 .skeleton-img,
@@ -240,11 +300,12 @@ main{
 }
 
 .skeleton-img{
-  height:135px;
+  height:190px;
+  border-radius:14px;
 }
 
 .skeleton-content{
-  padding:11px;
+  padding:14px 4px 4px 4px;
 }
 
 .skeleton-line{
@@ -257,6 +318,12 @@ main{
   width:62%;
 }
 
+.skeleton-line.btn{
+  height:38px;
+  border-radius:12px;
+  margin-top:6px;
+}
+
 /* NAV */
 .bottom-nav{
   position:fixed;
@@ -264,8 +331,7 @@ main{
   left:0;
   width:100%;
   height:72px;
-  background:rgba(17,24,39,0.95);
-  backdrop-filter:blur(16px);
+  background:#111827;
   display:flex;
   justify-content:space-around;
   align-items:center;
@@ -304,19 +370,249 @@ main{
   to{background-position:-200% 0;}
 }
 
+/* PRODUCT DETAIL MODAL (only shown to logged-in users) */
+.modal-overlay{
+    position:fixed;
+    top:70px;      /* header height */
+    bottom:72px;   /* footer height */
+    left:0;
+    right:0;
+    background:rgba(0,0,0,.6);
+    backdrop-filter:blur(8px);
+    z-index:999;
+  background:rgba(2,6,23,0.72);
+  backdrop-filter:blur(6px);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:2000;
+  padding:20px;
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .2s ease;
+}
+
+.modal-overlay.show{
+  opacity:1;
+  pointer-events:auto;
+}
+
+.modal-box{
+  background:linear-gradient(160deg,#1e293b,#111827);
+  border:1px solid rgba(255,255,255,0.08);
+  border-radius:22px;
+  padding:26px 22px;
+  max-width:340px;
+  width:100%;
+  text-align:center;
+  box-shadow:0 20px 50px rgba(0,0,0,0.5);
+  transform:translateY(14px) scale(.96);
+  transition:transform .22s ease;
+  max-height:90vh;
+overflow:hidden;
+}
+
+.modal-overlay.show .modal-box{
+  transform:translateY(0) scale(1);
+}
+
+.modal-box h3{
+  font-size:1.25rem;
+  margin-bottom:8px;
+}
+
+.modal-box p{
+  color:#cbd5e1;
+  font-size:13.5px;
+  line-height:1.6;
+  margin-bottom:20px;
+}
+
+.modal-actions{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+.modal-btn{
+  border:none;
+  outline:none;
+  cursor:pointer;
+  font-family:'Poppins',sans-serif;
+  font-weight:700;
+  font-size:13.5px;
+  padding:12px;
+  border-radius:12px;
+  text-decoration:none;
+  display:block;
+  background:transparent;
+  color:#94a3b8;
+}
+
+.product-modal-img{
+  width:100%;
+  height:180px;
+  object-fit:cover;
+  border-radius:14px;
+  margin-bottom:14px;
+  background:#334155;
+}
+
+.qty-selector{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:16px;
+  margin-bottom:14px;
+}
+
+.qty-btn{
+  width:38px;
+  height:38px;
+  border-radius:50%;
+  border:1px solid rgba(255,255,255,0.14);
+  background:rgba(255,255,255,0.06);
+  color:#f8fafc;
+  font-size:18px;
+  font-weight:700;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.qty-btn:active{
+  transform:scale(.92);
+}
+
+.qty-value{
+  font-size:1.15rem;
+  font-weight:700;
+  min-width:32px;
+}
+
+.modal-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding-bottom:15px;
+    margin-bottom:15px;
+    border-bottom:1px solid rgba(255,255,255,.1);
+}
+
+.modal-header h2{
+    font-size:20px;
+    color:#fff;
+}
+
+.close-btn{
+    border:none;
+    background:none;
+    color:#fff;
+    font-size:24px;
+    cursor:pointer;
+}
+
+.modal-body{
+    padding:10px 0;
+}
+
+.modal-footer{
+    margin-top:20px;
+    padding-top:15px;
+    border-top:1px solid rgba(255,255,255,.1);
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+}
+/* TOASTS */
+.toast-stack{
+  position:fixed;
+  top:16px;
+  left:50%;
+  transform:translateX(-50%);
+  z-index:3000;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  align-items:center;
+  width:100%;
+  padding:0 16px;
+}
+
+.toast{
+  background:rgba(15,23,42,0.95);
+  border:1px solid rgba(255,255,255,0.12);
+  color:#f8fafc;
+  padding:12px 18px;
+  border-radius:14px;
+  font-size:13.5px;
+  font-weight:600;
+  box-shadow:0 10px 26px rgba(0,0,0,0.4);
+  opacity:0;
+  transform:translateY(-14px);
+  transition:opacity .25s ease, transform .25s ease;
+  max-width:340px;
+  text-align:center;
+}
+
+.toast.show{
+  opacity:1;
+  transform:translateY(0);
+}
+
 @media(max-width:420px){
   .products-hero h2{
     font-size:1.7rem;
   }
 
   .product-card img{
-    height:125px;
+    height:150px;
   }
 
   .product-content h3{
     font-size:13px;
   }
+
+  header h1{
+    font-size:1.4rem;
+  }
 }
+
+#floatingCart{
+  position:fixed;
+  bottom:90px;
+  right:20px;
+  width:65px;
+  height:65px;
+  border-radius:50%;
+  background:linear-gradient(135deg,#ef4444,#f97316);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:28px;
+  text-decoration:none;
+  color:white;
+  box-shadow:0 10px 25px rgba(0,0,0,.35);
+  z-index:2000;
+}
+
+#floatingCart span{
+  position:absolute;
+  top:-3px;
+  right:-3px;
+  background:white;
+  color:red;
+  width:22px;
+  height:22px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:12px;
+  font-weight:bold;
+}
+
 </style>
 </head>
 
@@ -357,6 +653,7 @@ main{
     <div class="skeleton-content">
       <div class="skeleton-line"></div>
       <div class="skeleton-line short"></div>
+      <div class="skeleton-line btn"></div>
     </div>
   </div>
 
@@ -365,6 +662,7 @@ main{
     <div class="skeleton-content">
       <div class="skeleton-line"></div>
       <div class="skeleton-line short"></div>
+      <div class="skeleton-line btn"></div>
     </div>
   </div>
 </div>
@@ -373,38 +671,91 @@ main{
 
 <nav class="bottom-nav">
   <a href="index.html">
-    <span>⌂</span>
+    <span>🏠</span>
     <p>Home</p>
   </a>
-
   <a href="products.html" class="active">
-    <span>□</span>
+    <span>🛒</span>
     <p>Shop</p>
   </a>
-
   <a href="news.html">
-    <span>≡</span>
+    <span>📰</span>
     <p>News</p>
   </a>
-
   <a href="tourism.html">
-    <span>⌖</span>
+    <span>🗺️</span>
     <p>Tourism</p>
   </a>
-
   <a href="account.html">
-    <span>○</span>
+    <span>👤</span>
     <p>Account</p>
   </a>
 </nav>
 
+<a href="cart.html" id="floatingCart">
+  🛒
+  <span id="cartCount">0</span>
+</a>
+
+<!-- Product detail / quantity modal (only opens when logged in) -->
+<div class="modal-overlay" id="productModal">
+  <div class="modal-box">
+    <img id="pmImage" class="product-modal-img" alt="">
+    <h3 id="pmTitle"></h3>
+    <p id="pmDesc"></p>
+
+    <div class="qty-selector">
+      <button type="button" class="qty-btn" onclick="changeQty(-1)">-</button>
+      <span class="qty-value" id="pmQty">1</span>
+      <button type="button" class="qty-btn" onclick="changeQty(1)">+</button>
+    </div>
+
+    <div class="product-price" id="pmTotalPrice">Rs. 0</div>
+
+    <div class="modal-actions">
+      <button type="button" class="add-to-cart-btn" id="pmAddBtn" onclick="confirmAddToCart()">🛒 Add to Cart</button>
+      <button type="button" class="modal-btn" onclick="closeModal('productModal')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast container -->
+<div class="toast-stack" id="toastStack"></div>
+
 <script>
-const API =
+/* =========================================================
+   CONFIG
+   ========================================================= */
+
+// Products live in their own Apps Script (returns arrays via ?type=...)
+const PRODUCTS_API =
 "https://script.google.com/macros/s/AKfycbzRoJjmCgy--dsVAz8_TXu4CxiXiGGQ0GKTE6ufxN2Ctq8BceL1djQfp4N8vg65Jg0SaA/exec";
+
+// Login / account data lives in the account.html Apps Script (action-based POST).
+// Cart is tied to the logged-in user's email, so cart reads/writes go here too.
+// This requires the backend to support two more actions in addition to
+// "register" / "login" / "getUserData":
+//   POST { action:"getCart", email }              -> { status:"success", cart:[{id,name,price,image,qty}, ...] }
+//   POST { action:"addToCart", email, item }       -> { status:"success" }
+const ACCOUNT_API =
+"https://script.google.com/macros/s/AKfycbzWmBxTn30d2dZoPIdfC0VE9cL-Mt6UtEn8eUTVuJJFMx-1vnh7NmfJsJO2_q0YIc0ZRA/exec";
+
+const PLACEHOLDER_IMAGE =
+"data:image/svg+xml;utf8," + encodeURIComponent(`
+<svg xmlns='http://www.w3.org/2000/svg' width='300' height='190'>
+  <rect width='100%' height='100%' fill='#334155'/>
+  <text x='50%' y='50%' font-family='Poppins,sans-serif' font-size='14' fill='#94a3b8'
+    text-anchor='middle' dominant-baseline='middle'>No Image</text>
+</svg>`);
 
 let allProducts = [];
 let activeCategory = "All";
+let activeProduct = null;
+let activeQty = 1;
 
+/* =========================================================
+   GENERIC HELPERS
+   ========================================================= */
 function escapeHTML(value){
   return String(value || "")
     .replaceAll("&", "&amp;")
@@ -414,7 +765,6 @@ function escapeHTML(value){
     .replaceAll("'", "&#039;");
 }
 
-/* Smart search correction */
 function normalizeText(value){
   return String(value || "")
     .toLowerCase()
@@ -433,6 +783,34 @@ function getProductCategory(item){
   return item.category || item.type || "Fresh";
 }
 
+function getProductImage(item){
+  const candidates = [
+    item.image,
+    item.imageUrl,
+    item.imageURL,
+    item.image_url,
+    item.img,
+    item.imgUrl,
+    item.photo,
+    item.picture,
+    item.thumbnail,
+    item.thumb
+  ];
+
+  const found = candidates.find(value => typeof value === "string" && value.trim() !== "");
+  return found ? found.trim() : PLACEHOLDER_IMAGE;
+}
+
+function getProductId(item){
+  return String(item.id || item.ID || item.sku || item.name || item.title || "");
+}
+
+function getProductPrice(item){
+  const raw = item.price || item.rate || 0;
+  const num = parseFloat(String(raw).replace(/[^0-9.]/g, ""));
+  return isNaN(num) ? 0 : num;
+}
+
 function getSearchText(item){
   return normalizeText([
     item.name,
@@ -446,46 +824,271 @@ function getSearchText(item){
 
 function productMatchesSearch(item, query){
   const cleanQuery = normalizeText(query);
-
-  if(!cleanQuery){
-    return true;
-  }
+  if(!cleanQuery) return true;
 
   const words = cleanQuery.split(" ").filter(Boolean);
   const productText = getSearchText(item);
-
   return words.every(word => productText.includes(word));
 }
 
+/* =========================================================
+   TOASTS
+   ========================================================= */
+function showToast(message){
+  const stack = document.getElementById("toastStack");
+  const toast = document.createElement("div");
+  toast.className = "toast";
+  toast.textContent = message;
+  stack.appendChild(toast);
+
+  requestAnimationFrame(() => toast.classList.add("show"));
+
+  setTimeout(() => {
+    toast.classList.remove("show");
+    setTimeout(() => toast.remove(), 300);
+  }, 2200);
+}
+
+/* =========================================================
+   MODAL HELPERS
+   ========================================================= */
+function openModal(id){
+  document.getElementById(id).classList.add("show");
+}
+
+function closeModal(id){
+  document.getElementById(id).classList.remove("show");
+}
+
+/* =========================================================
+   LOGIN — matches the exact keys account.html actually writes:
+   localStorage: isLoggedIn = "true", userEmail, userName
+   ========================================================= */
+function isLoggedIn(){
+  return localStorage.getItem("isLoggedIn") === "true" && !!localStorage.getItem("userEmail");
+}
+
+function getCurrentUser(){
+  if(!isLoggedIn()) return null;
+  return {
+    email: localStorage.getItem("userEmail"),
+    name: localStorage.getItem("userName") || "User"
+  };
+}
+
+// Not logged in: toast, then send straight to account.html
+function requireLogin(){
+  showToast("⚠ Please login to order");
+  setTimeout(() => { window.location.href = "account.html"; }, 1100);
+}
+
+/* =========================================================
+   CART (tied to logged-in user's email, via ACCOUNT_API)
+   ========================================================= */
+function cartKeyFor(email){
+  return "cart_" + email;
+}
+
+function getLocalCart(email){
+  try{
+    return JSON.parse(localStorage.getItem(cartKeyFor(email))) || [];
+  }catch(err){
+    return [];
+  }
+}
+
+function saveLocalCart(email, cart){
+  localStorage.setItem(cartKeyFor(email), JSON.stringify(cart));
+}
+
+async function fetchCartFromApi(email){
+  const res = await fetch(ACCOUNT_API, {
+    method: "POST",
+    body: JSON.stringify({ action: "getCart", email })
+  });
+  const data = await res.json();
+  if(data.status !== "success" || !Array.isArray(data.cart)){
+    throw new Error("Cart endpoint not available");
+  }
+  return data.cart;
+}
+
+async function pushCartItemToApi(email, item){
+  const res = await fetch(ACCOUNT_API, {
+    method: "POST",
+    body: JSON.stringify({ action: "addToCart", email, item })
+  });
+  const data = await res.json();
+  if(data.status !== "success"){
+    throw new Error("Cart endpoint rejected item");
+  }
+}
+
+// Single source of truth: try the API first, always fall back to the
+// local per-email mirror, and keep the mirror in sync either way.
+async function getCart(){
+  const user = getCurrentUser();
+  if(!user) return [];
+
+  try{
+    const cart = await fetchCartFromApi(user.email);
+    saveLocalCart(user.email, cart); // keep the local mirror in sync
+    return cart;
+  }catch(err){
+    return getLocalCart(user.email);
+  }
+}
+
+async function addToCart(item, qty){
+  const user = getCurrentUser();
+  if(!user){
+    requireLogin();
+    return;
+  }
+
+  const id = getProductId(item);
+  const unitPrice = getProductPrice(item);
+  const cartItem = {
+    id,
+    name: item.name || item.title || "Untitled Product",
+    price: unitPrice,
+    image: getProductImage(item),
+    qty
+  };
+
+  // Merge into whatever cart state we currently have (API if available, else local mirror)
+  const currentCart = await getCart();
+  const existing = currentCart.find(entry => entry.id === id);
+  if(existing){
+    existing.qty = (existing.qty || 1) + qty;
+  }else{
+    currentCart.push(cartItem);
+  }
+
+  // Update the local mirror immediately so the badge feels instant
+  saveLocalCart(user.email, currentCart);
+  renderCartCount(currentCart);
+
+  try{
+    // Send the merged quantity, not just the increment, so the backend
+    // stays correct even if it does not do its own merging.
+    await pushCartItemToApi(user.email, existing || cartItem);
+  }catch(err){
+    // Backend doesn't support the cart actions yet; local mirror still works.
+  }
+
+  showToast("✓ Added to Cart");
+
+  // Re-sync with the API in case it merged/validated differently server-side
+  const freshCart = await getCart();
+  renderCartCount(freshCart);
+}
+
+function renderCartCount(cart){
+  const total = cart.reduce((sum, entry) => sum + (entry.qty || 1), 0);
+  document.getElementById("cartCount").textContent = total;
+}
+
+async function updateCartCount(){
+  const cart = await getCart();
+  renderCartCount(cart);
+}
+
+/* =========================================================
+   PRODUCT DETAIL MODAL (login-gated ordering)
+   ========================================================= */
+function openProductModal(productId){
+  if(!isLoggedIn()){
+    requireLogin();
+    return;
+  }
+
+  const item = allProducts.find(p => getProductId(p) === productId);
+  if(!item) return;
+
+  activeProduct = item;
+  activeQty = 1;
+
+  document.getElementById("pmImage").src = getProductImage(item);
+  document.getElementById("pmImage").alt = item.name || item.title || "";
+  document.getElementById("pmTitle").textContent = item.name || item.title || "Untitled Product";
+  document.getElementById("pmDesc").textContent = item.description || "";
+
+  const unitPrice = getProductPrice(item);
+  document.getElementById("pmAddBtn").disabled = unitPrice <= 0;
+  updateModalPrice();
+
+  openModal("productModal");
+}
+
+function changeQty(delta){
+  activeQty = Math.max(1, activeQty + delta);
+  document.getElementById("pmQty").textContent = activeQty;
+  updateModalPrice();
+}
+
+function updateModalPrice(){
+  if(!activeProduct) return;
+  const unitPrice = getProductPrice(activeProduct);
+  const total = unitPrice * activeQty;
+  document.getElementById("pmTotalPrice").textContent = "Rs. " + total;
+}
+
+async function confirmAddToCart(){
+  if(!activeProduct) return;
+  await addToCart(activeProduct, activeQty);
+  closeModal("productModal");
+}
+
+/* =========================================================
+   RENDERING
+   ========================================================= */
 function renderProducts(productList){
   const box = document.getElementById("productsContainer");
   box.innerHTML = "";
 
   if(!productList || productList.length === 0){
-    box.innerHTML = "<p class='empty-message'>No products found</p>";
+    box.innerHTML = `
+      <div class="empty-message">
+        <span class="empty-icon">🧺</span>
+        <p class="empty-title">No products found</p>
+        <p class="empty-sub">Try a different search or category</p>
+      </div>
+    `;
     return;
   }
 
   box.innerHTML = productList.map(item => {
+    const id = escapeHTML(getProductId(item));
     const title = escapeHTML(item.name || item.title || "Untitled Product");
     const description = escapeHTML(item.description || "");
-    const image = escapeHTML(item.image || "");
-    const category = escapeHTML(getProductCategory(item));
-    const price = escapeHTML(item.price || item.rate || "");
+    const image = escapeHTML(getProductImage(item));
+    const price = getProductPrice(item);
 
     return `
-      <div class="product-card">
-        <img src="${image}" alt="${title}" onerror="this.style.display='none'">
+      <div class="product-card" onclick="openProductModal('${id.replace(/'/g, "\\'")}')">
+        <div class="product-image-wrap">
+          <img
+            src="${image}"
+            alt="${title}"
+            loading="lazy"
+            onerror="this.onerror=null;this.src='${PLACEHOLDER_IMAGE}';"
+          >
+        </div>
 
         <div class="product-content">
           <h3>${title}</h3>
-
           <p class="product-desc">${description}</p>
 
-          <div class="product-bottom">
-            <span class="product-category">${category}</span>
-            ${price ? `<span class="product-price">${price}</span>` : ""}
-          </div>
+          ${price > 0 ? `<div class="product-price">Rs. ${price}</div>` : ""}
+
+          <button
+            type="button"
+            class="add-to-cart-btn"
+            onclick="event.stopPropagation(); openProductModal('${id.replace(/'/g, "\\'")}')"
+          >
+            🛒 Add to Cart
+          </button>
         </div>
       </div>
     `;
@@ -509,25 +1112,23 @@ function applyProductFilters(){
 
   const filtered = allProducts.filter(item => {
     const category = String(getProductCategory(item)).toLowerCase();
-
-    const categoryMatches =
-      selectedCategory === "all" ||
-      category === selectedCategory;
-
+    const categoryMatches = selectedCategory === "all" || category === selectedCategory;
     return categoryMatches && productMatchesSearch(item, searchValue);
   });
 
   renderProducts(filtered);
 }
 
+/* =========================================================
+   DATA LOADING
+   ========================================================= */
 async function fetchProducts(){
   const productTypes = ["products", "fresh"];
 
   for(const type of productTypes){
     try{
-      const res = await fetch(API + "?type=" + type);
+      const res = await fetch(PRODUCTS_API + "?type=" + type);
       const data = await res.json();
-
       if(Array.isArray(data) && data.length > 0){
         return data;
       }
@@ -541,13 +1142,16 @@ async function loadProducts(){
   try{
     allProducts = await fetchProducts();
     applyProductFilters();
-
   }catch(err){
     document.getElementById("productsContainer").innerHTML =
       "<p class='empty-message'>Failed to load products</p>";
   }
 }
 
+/* =========================================================
+   INIT
+   ========================================================= */
+updateCartCount();
 loadProducts();
 </script>
 

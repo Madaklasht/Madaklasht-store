@@ -1,680 +1,541 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Account - Madaklasht Store</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --navy: #0f172a;
+      --panel: #1e293b;
+      --header: #111827;
+      --muted: #cbd5e1;
+      --red: #ef4444;
+      --buyer: #ef4444;
+      --seller: #14b8a6;
+      --green: #22c55e;
+    }
 
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
-<title>Account - Madaklasht Store</title>
+    body {
+      min-height: 100vh;
+      padding-bottom: 90px;
+      background: var(--navy);
+      color: #fff;
+      font-family: 'Poppins', sans-serif;
+    }
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      padding: 18px;
+      background: var(--header);
+      box-shadow: 0 2px 10px rgba(0,0,0,.3);
+      text-align: center;
+    }
 
-<style>
+    header h1 { font-size: 1.7rem; }
+    .red { color: var(--red); }
+    main { max-width: 500px; margin: auto; padding: 20px; }
 
-/* RESET */
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
-}
+    .card,
+    .dashboard {
+      margin-top: 25px;
+      padding: 25px;
+      border-radius: 22px;
+      background: var(--panel);
+      box-shadow: 0 5px 20px rgba(0,0,0,.3);
+      animation: fadeIn .5s ease;
+    }
 
-body{
-  font-family:'Poppins',sans-serif;
-  background:#0f172a;
-  color:white;
-  min-height:100vh;
-  padding-bottom:90px;
-}
+    .card h2 { margin-bottom: 20px; text-align: center; }
+    .input-group { margin-bottom: 18px; }
+    .input-group label { display: block; margin-bottom: 8px; color: var(--muted); }
 
-/* HEADER */
-header{
-  background:#111827;
-  padding:18px;
-  text-align:center;
-  position:sticky;
-  top:0;
-  z-index:1000;
-  box-shadow:0 2px 10px rgba(0,0,0,0.3);
-}
+    .input-group input {
+      width: 100%;
+      padding: 14px;
+      border: 0;
+      border-radius: 14px;
+      outline: 0;
+      background: var(--navy);
+      color: #fff;
+      font: inherit;
+    }
 
-header h1{
-  font-size:1.7rem;
-}
+    .input-group input:focus { outline: 1px solid var(--red); }
 
-.red{
-  color:#ef4444;
-}
+    button {
+      width: 100%;
+      margin-top: 10px;
+      padding: 14px;
+      border: 0;
+      border-radius: 14px;
+      background: var(--red);
+      color: #fff;
+      cursor: pointer;
+      font: 600 16px 'Poppins', sans-serif;
+    }
 
-/* MAIN */
-main{
-  max-width:500px;
-  margin:auto;
-  padding:20px;
-}
+    button:hover { opacity: .9; }
+    button:disabled { cursor: not-allowed; opacity: .65; }
+    .switch { margin-top: 20px; color: var(--muted); text-align: center; }
+    .switch span { color: var(--red); cursor: pointer; font-weight: 600; }
 
-/* CARD */
-.card{
-  background:#1e293b;
-  border-radius:22px;
-  padding:25px;
-  margin-top:25px;
-  box-shadow:0 5px 20px rgba(0,0,0,0.3);
-  animation:fadeIn 0.5s ease;
-}
+    .dashboard-intro { margin-bottom: 20px; text-align: center; }
+    .welcome { font-size: 1.45rem; line-height: 1.35; }
+    .dashboard-subtitle { margin-top: 7px; color: var(--muted); font-size: .84rem; }
 
-.card h2{
-  text-align:center;
-  margin-bottom:20px;
-}
+    .mode-selector {
+      display: flex;
+      gap: 8px;
+      padding: 7px;
+      border-radius: 16px;
+      background: var(--navy);
+    }
 
-/* INPUT */
-.input-group{
-  margin-bottom:18px;
-}
+    .mode-option {
+      width: 50%;
+      margin: 0;
+      padding: 11px 7px;
+      border-radius: 11px;
+      background: transparent;
+      color: #94a3b8;
+      box-shadow: none;
+      font-size: .86rem;
+      transition: .25s ease;
+    }
 
-.input-group label{
-  display:block;
-  margin-bottom:8px;
-  color:#cbd5e1;
-}
+    .mode-option.buyer-active { background: var(--buyer); color: #fff; }
+    .mode-option.seller-active { background: var(--seller); color: #fff; }
+    .dashboard-view { animation: viewIn .35s ease; }
+    .dashboard-view[hidden] { display: none; }
 
-.input-group input{
-  width:100%;
-  padding:14px;
-  border:none;
-  border-radius:14px;
-  background:#0f172a;
-  color:white;
-  font-size:15px;
-  outline:none;
-}
+    .mode-banner {
+      margin-top: 20px;
+      padding: 17px;
+      border-left: 4px solid;
+      border-radius: 16px;
+    }
 
-/* BUTTON */
-button{
-  width:100%;
-  padding:14px;
-  border:none;
-  border-radius:14px;
-  background:#ef4444;
-  color:white;
-  font-size:16px;
-  font-weight:600;
-  cursor:pointer;
-  margin-top:10px;
-}
+    .buyer-banner { border-left-color: var(--buyer); }
+    .seller-banner { border-left-color: var(--seller); }
+    .mode-banner h3 { margin-bottom: 4px; font-size: 1rem; }
+    .mode-banner p { color: var(--muted); font-size: .8rem; }
 
-button:hover{
-  opacity:0.9;
-}
+    .buyer-banner,
+    .seller-banner {
+      background: #263449;
+    }
 
-/* SWITCH */
-.switch{
-  text-align:center;
-  margin-top:20px;
-  color:#cbd5e1;
-}
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin: 18px 0 22px;
+    }
 
-.switch span{
-  color:#ef4444;
-  cursor:pointer;
-  font-weight:600;
-}
 
-/* DASHBOARD */
-.dashboard{
-  text-align:center;
-}
+    .stat-box {
+      position: relative;
+      display: flex;
+      min-height: 88px;
+      padding: 13px 6px;
+      border-radius: 14px;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
 
-.dashboard h2{
-  margin-bottom:10px;
-}
+    .stat-box { background: var(--navy); }
 
-.dashboard p{
-  color:#cbd5e1;
-  margin-bottom:20px;
-}
+    .stat-box h3 { margin-bottom: 3px; font-size: 1.18rem; line-height: 1; }
+    .buyer-view .stat-box h3 { color: #f87171; }
+    .seller-view .stat-box h3 { color: #5eead4; }
+    .stat-box p { position: absolute; right: 6px; bottom: 11px; left: 6px; color: var(--muted); font-size: .67rem; line-height: 1.25; }
 
-.dashboard-btn{
-  display:block;
-  width:100%;
-  background:#0f172a;
-  padding:15px;
-  border-radius:14px;
-  margin-bottom:15px;
-  text-decoration:none;
-  color:white;
-  font-weight:500;
-}
+    .section-heading { margin: 0 0 11px; font-size: .95rem; font-weight: 600; }
+    .action-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 11px; }
 
-/* NAVIGATION */
-.bottom-nav{
-  position:fixed;
-  bottom:0;
-  left:0;
-  width:100%;
-  height:72px;
-  background:#111827;
-  display:flex;
-  justify-content:space-around;
-  align-items:center;
-  border-top:1px solid #1e293b;
-}
+    .dashboard-btn {
+      position: relative;
+      display: flex;
+      min-height: 99px;
+      padding: 14px 12px;
+      border-radius: 14px;
+      background: var(--navy);
+      color: #fff;
+      text-decoration: none;
+      align-items: center;
+      flex-direction: column;
+      justify-content: center;
+      text-align: center;
+      transition: transform .2s ease, background .2s ease;
+    }
 
-.bottom-nav a{
-  text-decoration:none;
-  color:#94a3b8;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  font-size:12px;
-}
+    .buyer-view .dashboard-btn:hover { background: #7f1d1d; }
+    .seller-view .dashboard-btn:hover { background: #115e59; }
+    .dashboard-btn:hover { transform: translateY(-2px); }
+    .action-icon {
+      position: absolute;
+      top: 21px;
+      left: 50%;
+      font-size: 1.35rem;
+      transform: translateX(-50%);
+    }
+    .action-label {
+      position: absolute;
+      right: 10px;
+      bottom: 13px;
+      left: 10px;
+      font-size: .8rem;
+      font-weight: 500;
+      line-height: 1.25;
+    }
 
-.bottom-nav a span{
-  font-size:22px;
-  margin-bottom:4px;
-}
+    .logout-btn { margin: 22px 0 0; background: var(--red); font-size: .9rem; }
 
-.bottom-nav a.active{
-  color:#ef4444;
-}
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      z-index: 1000;
+      display: flex;
+      width: 100%;
+      height: 72px;
+      align-items: center;
+      justify-content: space-around;
+      border-top: 1px solid var(--panel);
+      background: var(--header);
+    }
 
-/* ANIMATION */
-@keyframes fadeIn{
-  from{
-    opacity:0;
-    transform:translateY(10px);
-  }
-  to{
-    opacity:1;
-    transform:translateY(0);
-  }
-}
-/* TOAST MESSAGE */
-#toast{
-  position:fixed;
-  top:20px;
-  left:50%;
-  transform:translateX(-50%);
-  background:#111827;
-  color:white;
-  padding:14px 22px;
-  border-radius:14px;
-  font-size:14px;
-  z-index:9999;
-  opacity:0;
-  pointer-events:none;
-  transition:0.4s;
-  box-shadow:0 5px 20px rgba(0,0,0,0.3);
-}
+    .bottom-nav a { display: flex; color: #94a3b8; text-decoration: none; align-items: center; flex-direction: column; font-size: 12px; }
+    .bottom-nav a span { margin-bottom: 4px; font-size: 22px; }
+    .bottom-nav a.active { color: var(--red); }
 
-/* SHOW TOAST */
-#toast.show{
-  opacity:1;
-  top:40px;
-}
+    #toast {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      z-index: 9999;
+      max-width: calc(100% - 32px);
+      padding: 14px 22px;
+      border-radius: 14px;
+      background: var(--header);
+      box-shadow: 0 5px 20px rgba(0,0,0,.3);
+      opacity: 0;
+      pointer-events: none;
+      transform: translateX(-50%);
+      transition: .4s;
+    }
 
-/* SUCCESS */
-#toast.success{
-  border-left:5px solid #22c55e;
-}
+    #toast.show { top: 40px; opacity: 1; }
+    #toast.success { border-left: 5px solid var(--green); }
+    #toast.error { border-left: 5px solid var(--red); }
+    .loading-number { color: #94a3b8 !important; animation: pulse 1s infinite; }
 
-/* ERROR */
-#toast.error{
-  border-left:5px solid #ef4444;
-}
-
-.stats{
-  display:flex;
-  justify-content:space-between;
-  gap:10px;
-  margin:25px 0;
-}
-
-.stat-box{
-  flex:1;
-  background:#0f172a;
-  border-radius:14px;
-  padding:15px;
-  text-align:center;
-}
-
-.stat-box h3{
-  color:#ef4444;
-  font-size:22px;
-  margin-bottom:5px;
-}
-
-.stat-box p{
-  color:#cbd5e1;
-  font-size:13px;
-}
-
-.loading-number {
-  position: relative;
-  overflow: hidden;
-  color: #94a3b8;
-}
-
-.loading-number::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
-  animation: shimmer 1.2s infinite;
-}
-
-@keyframes shimmer {
-  100% {
-    left: 100%;
-  }
-}
-
-.pulse {
-  animation: pulse 1s infinite;
-}
-
-@keyframes pulse {
-  0% { opacity: 0.5; transform: scale(1); }
-  50% { opacity: 1; transform: scale(1.05); }
-  100% { opacity: 0.5; transform: scale(1); }
-}
-
-</style>
-
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes viewIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes pulse { 50% { opacity: .45; } }
+    @media (min-width: 450px) { .action-grid { grid-template-columns: repeat(3, 1fr); } }
+  </style>
 </head>
-
 <body>
+  <header>
+    <h1><span class="red">Madaklasht</span> Store</h1>
+  </header>
 
-<!-- HEADER -->
-<header>
-  <h1><span class="red">Madaklasht</span> Store</h1>
-</header>
+  <main>
+    <section class="card" id="loginCard">
+      <h2>Login</h2>
+      <div class="input-group"><label>Email</label><input type="email" id="loginEmail" placeholder="Enter email"></div>
+      <div class="input-group"><label>Password</label><input type="password" id="loginPassword" placeholder="Enter password"></div>
+      <button onclick="login()">Login</button>
+      <div class="switch">Don't have account? <span onclick="showRegister()">Register</span></div>
+    </section>
 
-<main>
+    <section class="card" id="registerCard" hidden>
+      <h2>Create Account</h2>
+      <div class="input-group"><label>Full Name</label><input type="text" id="registerName" placeholder="Enter full name"></div>
+      <div class="input-group"><label>Phone Number</label><input type="text" id="registerPhone" placeholder="Enter phone number"></div>
+      <div class="input-group"><label>Email</label><input type="email" id="registerEmail" placeholder="Enter email"></div>
+      <div class="input-group"><label>Password</label><input type="password" id="registerPassword" placeholder="Create password"></div>
+      <div class="input-group"><label>Rewrite Password</label><input type="password" id="registerPassword2" placeholder="Rewrite password"></div>
+      <button onclick="register()">Create Account</button>
+      <div class="switch">Already have account? <span onclick="showLogin()">Login</span></div>
+    </section>
 
-<!-- LOGIN CARD -->
-<div class="card" id="loginCard">
+    <section class="dashboard" id="dashboardCard" hidden>
+      <div class="dashboard-intro">
+        <h2 class="welcome" id="welcomeText">Welcome</h2>
+        <p class="dashboard-subtitle">Everything you need, all in one place.</p>
+      </div>
 
-  <h2>Login</h2>
+      <div class="mode-selector" role="tablist" aria-label="Account mode">
+        <button id="buyerMode" class="mode-option buyer-active" onclick="switchDashboardMode('buyer')" role="tab" aria-selected="true">🛍️ Buyer</button>
+        <button id="sellerMode" class="mode-option" onclick="switchDashboardMode('seller')" role="tab" aria-selected="false">🏪 Seller</button>
+      </div>
 
-  <div class="input-group">
-    <label>Email</label>
-    <input type="email" id="loginEmail" placeholder="Enter email">
-  </div>
+      <!-- BUYER DASHBOARD -->
+      <div id="buyerView" class="dashboard-view buyer-view">
+        <div class="mode-banner buyer-banner">
+          <h3>Enjoy shopping and services your way.</h3>
+          <p>Browse, save favourites, follow your orders, and make the most of Madaklasht Store.</p>
+        </div>
 
-  <div class="input-group">
-    <label>Password</label>
-    <input type="password" id="loginPassword" placeholder="Enter password">
-  </div>
+        <div class="stats" aria-label="Buyer activity">
+          <div class="stat-box"><h3 id="buyerTotalOrders">0</h3><p>My Orders</p></div>
+          <div class="stat-box"><h3 id="buyerProcessingOrders">0</h3><p>On The Way</p></div>
+          <div class="stat-box"><h3 id="buyerDeliveredOrders">0</h3><p>Delivered</p></div>
+        </div>
 
-  <button onclick="login()">Login</button>
+        <h3 class="section-heading">Shopping Tools</h3>
+        <div class="action-grid">
+          <a href="myorders.html" class="dashboard-btn"><span class="action-icon">📦</span><span class="action-label">My Orders</span></a>
+          <a href="wishlist.html" class="dashboard-btn"><span class="action-icon">♡</span><span class="action-label">Wishlist</span></a>
+          <a href="earn.html" class="dashboard-btn"><span class="action-icon">✨</span><span class="action-label">Earn With Us</span></a>
+		  <a href="contact.html" class="dashboard-btn"><span class="action-icon">📞</span><span class="action-label">Contact Us</span></a>
+        </div>
+      </div>
 
-  <div class="switch">
-    Don't have account?
-    <span onclick="showRegister()">Register</span>
-  </div>
+      <!-- SELLER DASHBOARD -->
+      <div id="sellerView" class="dashboard-view seller-view" hidden>
+        <div class="mode-banner seller-banner">
+          <h3>Grow your store with confidence.</h3>
+          <p>Manage orders, build your shop, and unlock more ways to earn with Madaklasht.</p>
+        </div>
 
-</div>
+        <div class="stats" aria-label="Seller activity">
+          <div class="stat-box"><h3 id="sellerTotalOrders">0</h3><p>New Orders</p></div>
+          <div class="stat-box"><h3 id="sellerProductCount">0</h3><p>Products</p></div>
+          <div class="stat-box"><h3 id="sellerSalesAmount">0</h3><p>Sales</p></div>
+        </div>
 
-<!-- REGISTER CARD -->
-<div class="card" id="registerCard" style="display:none;">
+        <h3 class="section-heading">Store Tools</h3>
+        <div class="action-grid">
+          <a href="store.html" class="dashboard-btn"><span class="action-icon">🏪</span><span class="action-label">My Store</span></a>
+          <a href="manage-orders.html" class="dashboard-btn"><span class="action-icon">🧾</span><span class="action-label">Manage Orders</span></a>
+          <a href="earn.html" class="dashboard-btn"><span class="action-icon">✨</span><span class="action-label">Earn With Us</span></a>
+          <a href="contact.html" class="dashboard-btn"><span class="action-icon">📞</span><span class="action-label">Contact Us</span></a>
+        </div>
+      </div>
 
-  <h2>Create Account</h2>
+      <button class="logout-btn" onclick="logout()">Logout</button>
+    </section>
+  </main>
 
-  <div class="input-group">
-    <label>Full Name</label>
-    <input type="text" id="registerName" placeholder="Enter full name">
-  </div>
+  <nav class="bottom-nav">
+    <a href="index.html"><span>🏠</span><p>Home</p></a>
+    <a href="products.html"><span>🛍️</span><p>Shop</p></a>
+    <a href="news.html"><span>📰</span><p>News</p></a>
+    <a href="tourism.html"><span>🗺️</span><p>Tourism</p></a>
+    <a href="account.html" class="active"><span>👤</span><p>Account</p></a>
+  </nav>
 
-  <div class="input-group">
-    <label>Phone Number</label>
-    <input type="text" id="registerPhone" placeholder="Enter phone number">
-  </div>
+  <div id="toast"></div>
 
-  <div class="input-group">
-    <label>Email</label>
-    <input type="email" id="registerEmail" placeholder="Enter email">
-  </div>
+  <script>
+    /* ================= API CONFIGURATION ================= */
+    const API = "https://script.google.com/macros/s/AKfycbwsl3xHSEKv_gJirTULo6I-5iyG7KGEGl97xmbFyQZ42eaDZ--yJAM9M_-7JPNo8ywg/exec";
+    // Keep the buyer API as your existing Account API.
+    const BUYER_DASHBOARD_API = API;
+    // Replace only when the seller dashboard uses a separate deployed Apps Script.
+    const SELLER_DASHBOARD_API = API;
 
-  <div class="input-group">
-    <label>Password</label>
-    <input type="password" id="registerPassword" placeholder="Create password">
-  </div>
-
-  <div class="input-group">
-    <label>Rewrite Password</label>
-    <input type="password" id="registerPassword2" placeholder="Rewrite password">
-  </div>
-
-  <button onclick="register()">Create Account</button>
-
-  <div class="switch">
-    Already have account?
-    <span onclick="showLogin()">Login</span>
-  </div>
-
-</div>
-
-<!-- DASHBOARD -->
-<div class="card dashboard" id="dashboardCard" style="display:none;">
-
-  <h2 id="welcomeText">Welcome</h2>
-
-  <p>
-    Manage your Madaklasht Store account
-  </p>
-
-  <div class="stats">
-
-    <div class="stat-box">
-      <h3 id="totalOrders">0</h3>
-      <p>Orders</p>
-    </div>
-
-    <div class="stat-box">
-      <h3 id="processingOrders">0</h3>
-      <p>Processing</p>
-    </div>
-
-    <div class="stat-box">
-      <h3 id="earnedAmount">0</h3>
-      <p>Earned</p>
-    </div>
-
-  </div>
-
-  <a href="myorders.html" class="dashboard-btn">🛒 My Orders</a>
-
-  <a href="#" class="dashboard-btn">➕ Add to Cart</a>
-
-  <a href="earn.html" class="dashboard-btn">💰 Earn With Us</a>
-
-  <a href="withdrawal.html" class="dashboard-btn">💸 Withdrawal</a>
-
-  <a href="#" class="dashboard-btn">📞 Contact Us</a>
-
-  <button onclick="logout()">Logout</button>
-
-</div>
-</main>
-
-<!-- BOTTOM NAV -->
-<nav class="bottom-nav">
-
-<a href="index.html">
-  <span>🏠</span>
-  <p>Home</p>
-</a>
-
-<a href="products.html">
-  <span>🛒</span>
-  <p>Shop</p>
-</a>
-
-<a href="news.html">
-  <span>📰</span>
-  <p>News</p>
-</a>
-
-<a href="tourism.html">
-  <span>🗺️</span>
-  <p>Tourism</p>
-</a>
-
-<a href="account.html" class="active">
-  <span>👤</span>
-  <p>Account</p>
-</a>
-
-</nav>
-
-<script>
-
-/* ================= API ================= */
-const API = "https://script.google.com/macros/s/AKfycbzWmBxTn30d2dZoPIdfC0VE9cL-Mt6UtEn8eUTVuJJFMx-1vnh7NmfJsJO2_q0YIc0ZRA/exec";
-
-/* ================= UI SWITCH ================= */
-function showRegister(){
-  document.getElementById("loginCard").style.display = "none";
-  document.getElementById("registerCard").style.display = "block";
-}
-
-function showLogin(){
-  document.getElementById("registerCard").style.display = "none";
-  document.getElementById("loginCard").style.display = "block";
-}
-
-/* ================= TOAST ================= */
-function showToast(message, type){
-
-  let toast = document.getElementById("toast");
-
-  toast.innerText = message;
-  toast.className = "";
-  toast.classList.add("show");
-  toast.classList.add(type);
-
-  setTimeout(() => {
-    toast.classList.remove("show");
-  }, 3000);
-}
-
-/* ================= REGISTER (REAL API) ================= */
-async function register(){
-
-  let name = document.getElementById("registerName").value.trim();
-  let phone = document.getElementById("registerPhone").value.trim();
-  let email = document.getElementById("registerEmail").value.trim().toLowerCase();
-  let password = document.getElementById("registerPassword").value;
-  let password2 = document.getElementById("registerPassword2").value;
-
-  if(!name || !phone || !email || !password || !password2){
-    return showToast("Please fill all fields","error");
-  }
-
-  if(password !== password2){
-    return showToast("Passwords do not match","error");
-  }
-
-  let btn = document.querySelector("#registerCard button");
-  btn.disabled = true;
-  btn.innerText = "Creating...";
-
-  try{
-
-    let res = await fetch(API, {
-      method: "POST",
-      body: JSON.stringify({
-        action: "register",
-        name,
-        phone,
-        email,
-        password
-      })
-    });
-
-    let data = await res.json();
-
-    btn.disabled = false;
-    btn.innerText = "Create Account";
-
-    if(data.status === "success"){
-      showToast("Account created successfully","success");
-      showLogin();
-    } else {
-      showToast(data.message || "Registration failed","error");
+    function showRegister() {
+      document.getElementById("loginCard").hidden = true;
+      document.getElementById("registerCard").hidden = false;
     }
 
-  }catch(e){
-    btn.disabled = false;
-    btn.innerText = "Create Account";
-    showToast("Server error","error");
-  }
-}
-
-/* ================= loading bar ===============*/
-function startLoadingStats(){
-
-  document.getElementById("totalOrders").classList.add("loading-number","pulse");
-  document.getElementById("processingOrders").classList.add("loading-number","pulse");
-  document.getElementById("earnedAmount").classList.add("loading-number","pulse");
-
-  document.getElementById("totalOrders").innerText = "0";
-  document.getElementById("processingOrders").innerText = "0";
-  document.getElementById("earnedAmount").innerText = "0";
-}
-
-function stopLoadingStats(){
-
-  document.getElementById("totalOrders").classList.remove("loading-number","pulse");
-  document.getElementById("processingOrders").classList.remove("loading-number","pulse");
-  document.getElementById("earnedAmount").classList.remove("loading-number","pulse");
-}
-
-/* ================= LOGIN (REAL API CHECK) ================= */
-async function login(){
-
-  let email = document.getElementById("loginEmail").value.trim().toLowerCase();
-  let password = document.getElementById("loginPassword").value;
-
-  if(!email || !password){
-    return showToast("Please fill all fields","error");
-  }
-
-  let btn = document.querySelector("#loginCard button");
-  btn.disabled = true;
-  btn.innerText = "Logging in...";
-
-  try{
-
-    let res = await fetch(API, {
-      method: "POST",
-      body: JSON.stringify({
-        action: "login",
-        email,
-        password
-      })
-    });
-
-    let data = await res.json();
-
-    btn.disabled = false;
-    btn.innerText = "Login";
-
-    if(data.status === "success"){
-
-      localStorage.setItem("isLoggedIn","true");
-      localStorage.setItem("userEmail", email);
-      localStorage.setItem("userName", data.user.name);
-
-      showToast("Login successful","success");
-      showDashboard();
-      loadDashboardData();
-
-    } else {
-      showToast("Invalid email or password","error");
+    function showLogin() {
+      document.getElementById("registerCard").hidden = true;
+      document.getElementById("loginCard").hidden = false;
     }
 
-  }catch(e){
-    btn.disabled = false;
-    btn.innerText = "Login";
-    showToast("Server error","error");
-  }
-}
+    function switchDashboardMode(mode) {
+      const buyer = mode === "buyer";
+      document.getElementById("buyerView").hidden = !buyer;
+      document.getElementById("sellerView").hidden = buyer;
+      document.getElementById("buyerMode").classList.toggle("buyer-active", buyer);
+      document.getElementById("sellerMode").classList.toggle("seller-active", !buyer);
+      document.getElementById("buyerMode").setAttribute("aria-selected", buyer);
+      document.getElementById("sellerMode").setAttribute("aria-selected", !buyer);
 
-/* ================= GREETING ================= */
-function getGreeting(){
-
-  const hour = new Date().getHours();
-
-  if(hour < 12) return "Good Morning";
-  if(hour < 17) return "Good Afternoon";
-  if(hour < 20) return "Good Evening";
-  return "Good Night";
-}
-
-/* ================= DASHBOARD ================= */
-function showDashboard(){
-
-  document.getElementById("loginCard").style.display = "none";
-  document.getElementById("registerCard").style.display = "none";
-  document.getElementById("dashboardCard").style.display = "block";
-
-  let name = localStorage.getItem("userName") || "User";
-
-  document.getElementById("welcomeText").innerHTML =
-    `${getGreeting()} <span class="red">${name}</span>`;
-}
-
-/* ================= LOAD DASHBOARD DATA ================= */
-async function loadDashboardData(){
-
-  let email = localStorage.getItem("userEmail");
-  if(!email) return;
-
-  // 🔥 START ANIMATION
-  startLoadingStats();
-
-  try{
-
-    let res = await fetch(API, {
-      method: "POST",
-      body: JSON.stringify({
-        action: "getUserData",
-        email: email
-      })
-    });
-
-    let data = await res.json();
-
-    if(data.status === "success"){
-
-      // small delay for smooth feel
-      setTimeout(() => {
-
-        stopLoadingStats();
-
-        document.getElementById("totalOrders").innerText = data.totalOrders;
-        document.getElementById("processingOrders").innerText = data.processingOrders;
-        document.getElementById("earnedAmount").innerText = data.earnings;
-
-      }, 600);
-
+      if (buyer) loadBuyerDashboardData();
+      else loadSellerDashboardData();
     }
 
-  }catch(e){
+    function showToast(message, type) {
+      const toast = document.getElementById("toast");
+      toast.textContent = message;
+      toast.className = "show " + (type || "");
+      setTimeout(function () { toast.classList.remove("show"); }, 3000);
+    }
 
-    stopLoadingStats();
-    console.log("Dashboard error", e);
+    async function register() {
+      const name = document.getElementById("registerName").value.trim();
+      const phone = document.getElementById("registerPhone").value.trim();
+      const email = document.getElementById("registerEmail").value.trim().toLowerCase();
+      const password = document.getElementById("registerPassword").value;
+      const password2 = document.getElementById("registerPassword2").value;
 
-  }
-}
+      if (!name || !phone || !email || !password || !password2) return showToast("Please fill all fields", "error");
+      if (password !== password2) return showToast("Passwords do not match", "error");
 
-/* ================= LOGOUT ================= */
-function logout(){
+      const button = document.querySelector("#registerCard button");
+      button.disabled = true;
+      button.textContent = "Creating...";
 
-  localStorage.removeItem("isLoggedIn");
-  localStorage.removeItem("userEmail");
-  localStorage.removeItem("userName");
+      try {
+        const response = await fetch(API, {
+          method: "POST",
+          body: JSON.stringify({ action: "register", name, phone, email, password })
+        });
+        const data = await response.json();
+        if (data.status === "success") {
+          showToast("Account created successfully", "success");
+          showLogin();
+        } else showToast(data.message || "Registration failed", "error");
+      } catch (_) {
+        showToast("Server error", "error");
+      } finally {
+        button.disabled = false;
+        button.textContent = "Create Account";
+      }
+    }
 
-  location.reload();
-}
+    async function login() {
+      const email = document.getElementById("loginEmail").value.trim().toLowerCase();
+      const password = document.getElementById("loginPassword").value;
+      if (!email || !password) return showToast("Please fill all fields", "error");
 
-/* ================= AUTO LOGIN ================= */
-window.onload = function(){
+      const button = document.querySelector("#loginCard button");
+      button.disabled = true;
+      button.textContent = "Logging in...";
 
-  if(localStorage.getItem("isLoggedIn") === "true"){
-    showDashboard();
-    loadDashboardData();
-  }
+      try {
+        const response = await fetch(API, {
+          method: "POST",
+          body: JSON.stringify({ action: "login", email, password })
+        });
+        const data = await response.json();
 
-}
-</script>
-<!-- TOAST MESSAGE -->
-<div id="toast"></div>
+        if (data.status === "success") {
+          localStorage.setItem("isLoggedIn", "true");
+          localStorage.setItem("userEmail", email);
+          localStorage.setItem("userName", data.user.name);
+          showToast("Login successful", "success");
+          showDashboard();
+          loadBuyerDashboardData();
+        } else showToast("Invalid email or password", "error");
+      } catch (_) {
+        showToast("Server error", "error");
+      } finally {
+        button.disabled = false;
+        button.textContent = "Login";
+      }
+    }
+
+    function getGreeting() {
+      const hour = new Date().getHours();
+      if (hour < 12) return "Good Morning";
+      if (hour < 17) return "Good Afternoon";
+      if (hour < 20) return "Good Evening";
+      return "Good Night";
+    }
+
+    function showDashboard() {
+      document.getElementById("loginCard").hidden = true;
+      document.getElementById("registerCard").hidden = true;
+      document.getElementById("dashboardCard").hidden = false;
+      const name = localStorage.getItem("userName") || "User";
+      document.getElementById("welcomeText").innerHTML = `${getGreeting()}, <span class="red">${escapeHTML(name)}</span> 👋`;
+    }
+
+    function setStat(id, value) {
+      document.getElementById(id).textContent = value == null ? 0 : value;
+    }
+
+    function setLoading(ids, loading) {
+      ids.forEach(function (id) {
+        document.getElementById(id).classList.toggle("loading-number", loading);
+      });
+    }
+
+    async function loadBuyerDashboardData() {
+      const email = localStorage.getItem("userEmail");
+      if (!email) return;
+      const ids = ["buyerTotalOrders", "buyerProcessingOrders", "buyerDeliveredOrders"];
+      setLoading(ids, true);
+
+      try {
+        const response = await fetch(BUYER_DASHBOARD_API, {
+          method: "POST",
+          body: JSON.stringify({ action: "getUserData", email: email })
+        });
+        const data = await response.json();
+        if (data.status === "success") {
+          setStat("buyerTotalOrders", data.totalOrders);
+          setStat("buyerProcessingOrders", data.processingOrders);
+          setStat("buyerDeliveredOrders", data.deliveredOrders);
+        }
+      } catch (error) {
+        console.log("Buyer dashboard error", error);
+      } finally {
+        setLoading(ids, false);
+      }
+    }
+
+    async function loadSellerDashboardData() {
+      const email = localStorage.getItem("userEmail");
+      if (!email) return;
+      const ids = ["sellerTotalOrders", "sellerProductCount", "sellerSalesAmount"];
+      setLoading(ids, true);
+
+      try {
+        const response = await fetch(SELLER_DASHBOARD_API, {
+          method: "POST",
+          body: JSON.stringify({ action: "getSellerDashboardData", sellerEmail: email })
+        });
+        const data = await response.json();
+
+        if (data.status === "success") {
+          setStat("sellerTotalOrders", data.totalOrders);
+          setStat("sellerProductCount", data.totalProducts);
+          setStat("sellerSalesAmount", data.salesAmount);
+        }
+      } catch (error) {
+        console.log("Seller dashboard error", error);
+      } finally {
+        setLoading(ids, false);
+      }
+    }
+
+    function logout() {
+      localStorage.removeItem("isLoggedIn");
+      localStorage.removeItem("userEmail");
+      localStorage.removeItem("userName");
+      location.reload();
+    }
+
+    function escapeHTML(value) {
+      return String(value || "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    window.onload = function () {
+      if (localStorage.getItem("isLoggedIn") === "true") {
+        showDashboard();
+        loadBuyerDashboardData();
+      }
+    };
+  </script>
 </body>
 </html>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact Us - Madaklasht Store</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{--navy:#0f172a;--header:#111827;--panel:#1e293b;--banner:#263449;--red:#ef4444;--muted:#cbd5e1;--dim:#94a3b8;--green:#22c55e}*{box-sizing:border-box;margin:0;padding:0}body{min-height:100vh;padding-bottom:90px;background:var(--navy);color:#fff;font-family:'Poppins',sans-serif}header{position:sticky;top:0;z-index:1000;padding:18px;background:var(--header);box-shadow:0 2px 10px rgba(0,0,0,.3);text-align:center}header h1{font-size:1.7rem}.red{color:var(--red)}main{max-width:500px;margin:auto;padding:15px}.title-card{display:flex;margin-bottom:12px;padding:11px 12px;border-radius:14px;background:var(--panel);box-shadow:0 5px 16px rgba(0,0,0,.18);align-items:center;gap:10px}.back-arrow{display:grid;width:32px;height:32px;flex:0 0 32px;border-radius:10px;background:var(--navy);color:#fff;text-decoration:none;place-items:center;font-size:1.05rem}.title-card h2{font-size:.92rem}.mode-banner{margin-bottom:16px;padding:17px;border-left:4px solid var(--red);border-radius:16px;background:var(--banner);box-shadow:0 5px 20px rgba(0,0,0,.22)}.mode-banner h2{margin-bottom:5px;font-size:1rem}.mode-banner p{color:var(--muted);font-size:.78rem;line-height:1.6}.contact-card{display:flex;gap:13px;margin-bottom:11px;padding:15px;border-radius:17px;background:var(--panel);box-shadow:0 5px 18px rgba(0,0,0,.2);align-items:center}.contact-icon{display:grid;width:44px;height:44px;flex:0 0 44px;border-radius:13px;background:var(--navy);place-items:center;font-size:1.35rem}.contact-info{min-width:0;flex:1}.contact-info h3{margin-bottom:2px;font-size:.86rem}.contact-info p{overflow:hidden;color:var(--muted);font-size:.7rem;text-overflow:ellipsis;white-space:nowrap}.contact-button{width:auto;padding:8px 10px;border:0;border-radius:10px;background:var(--red);color:#fff;cursor:pointer;font:600 .7rem 'Poppins',sans-serif;text-decoration:none}.help-note{margin-top:16px;padding:14px;border-radius:15px;background:var(--header);color:var(--dim);font-size:.72rem;line-height:1.6}.help-note strong{color:#fff}.bottom-nav{position:fixed;bottom:0;left:0;z-index:1000;display:flex;width:100%;height:72px;align-items:center;justify-content:space-around;border-top:1px solid var(--panel);background:var(--header)}.bottom-nav a{display:flex;color:var(--dim);text-decoration:none;align-items:center;flex-direction:column;font-size:12px}.bottom-nav a span{margin-bottom:4px;font-size:22px}.bottom-nav a.active{color:var(--red)}#toast{position:fixed;top:20px;left:50%;z-index:3000;max-width:calc(100% - 32px);padding:13px 18px;border-radius:13px;background:var(--header);box-shadow:0 5px 20px rgba(0,0,0,.35);opacity:0;pointer-events:none;transform:translateX(-50%);transition:.3s;font-size:.8rem}.toast-show{top:38px!important;opacity:1!important}.toast-success{border-left:4px solid var(--green)}
+  </style>
+</head>
+<body>
+  <header><h1><span class="red">Madaklasht</span> Store</h1></header>
+  <main>
+    <section class="title-card"><a class="back-arrow" href="account.html" aria-label="Back to account">←</a><h2>Contact Us</h2></section>
+    <section class="mode-banner"><h2>Have a concern or need help?</h2><p>If you face any problem anywhere on Madaklasht Store, please get in touch with us. We are here to help.</p></section>
+    <section>
+      <article class="contact-card"><span class="contact-icon">💬</span><div class="contact-info"><h3>WhatsApp</h3><p id="whatsappText">Add your WhatsApp number</p></div><a id="whatsappLink" class="contact-button" href="#">Chat</a></article>
+      <article class="contact-card"><span class="contact-icon">✉️</span><div class="contact-info"><h3>Email Address</h3><p id="emailText">Add your support email</p></div><a id="emailLink" class="contact-button" href="#">Email</a></article>
+    </section>
+    <div class="help-note"><strong>Helpful tip:</strong> When you contact us, please include your account email and, if relevant, your order ID so we can help you faster.</div>
+  </main>
+  <nav class="bottom-nav"><a href="index.html"><span>🏠</span><p>Home</p></a><a href="products.html"><span>🛍️</span><p>Shop</p></a><a href="news.html"><span>📰</span><p>News</p></a><a href="tourism.html"><span>🗺️</span><p>Tourism</p></a><a href="account.html" class="active"><span>👤</span><p>Account</p></a></nav><div id="toast"></div>
+  <script>
+    /* Replace these two values with your real support contacts. WhatsApp uses country code, without + or spaces. */
+    const SUPPORT_WHATSAPP = "";
+    const SUPPORT_EMAIL = "";
+    function showToast(message){const toast=document.getElementById("toast");toast.textContent=message;toast.className="toast-show toast-success";setTimeout(()=>toast.className="",2500)}
+    function configureContacts(){const whatsappText=document.getElementById("whatsappText"),whatsappLink=document.getElementById("whatsappLink"),emailText=document.getElementById("emailText"),emailLink=document.getElementById("emailLink");if(SUPPORT_WHATSAPP){whatsappText.textContent="+"+SUPPORT_WHATSAPP;whatsappLink.href="https://wa.me/"+SUPPORT_WHATSAPP;whatsappLink.target="_blank";whatsappLink.rel="noopener"}else{whatsappLink.addEventListener("click",event=>{event.preventDefault();showToast("WhatsApp number will be added soon.")})}if(SUPPORT_EMAIL){emailText.textContent=SUPPORT_EMAIL;emailLink.href="mailto:"+SUPPORT_EMAIL}else{emailLink.addEventListener("click",event=>{event.preventDefault();showToast("Support email will be added soon.")})}}
+    configureContacts();
+  </script>
+</body>
+</html>

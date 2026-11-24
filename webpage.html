@@ -1,0 +1,181 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sign In</title>
+
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    min-height: 100vh;
+    overflow: hidden;
+    background: #111;
+}
+
+/* Vertical Mobile Background */
+.background {
+    position: fixed;
+    width: 100%;
+    max-width: 430px;
+    height: 100vh;
+    height: 100dvh;
+    left: 50%;
+    top: 0;
+    background-image: url("background.png");
+    background-size: cover;
+    background-position: center;
+    filter: blur(0px);
+    transform: translateX(-50%) scale(1);
+    animation: blurBackground 1s ease forwards;
+    animation-delay: 1s;
+}
+
+@keyframes blurBackground {
+    to {
+        filter: blur(8px) brightness(0.65);
+        transform: translateX(-50%) scale(1.04);
+    }
+}
+
+/* Main Container */
+.container {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    max-width: 430px;
+    height: 100vh;
+    height: 100dvh;
+    margin: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+/* Card */
+.card {
+    width: 100%;
+    max-width: 360px;
+    padding: 35px 25px;
+    border-radius: 25px;
+    background: rgba(40, 40, 40, 0.90);
+    border: 1px solid rgba(255,255,255,0.15);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    text-align: center;
+    color: white;
+
+    opacity: 0;
+    transform: translateY(25px);
+    animation: showCard 0.7s ease forwards;
+    animation-delay: 1s;
+}
+
+@keyframes showCard {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Profile Picture */
+.profile {
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid white;
+    margin-bottom: 22px;
+    background: #ddd;
+}
+
+h2 {
+    font-size: 25px;
+    margin-bottom: 12px;
+}
+
+p1 {
+    font-size: 14px;
+    color: #eee;
+    margin-bottom: 25px;
+    line-height: 1.5;
+}
+
+p2 {
+    font-size: 14px;
+    color: #999;
+    margin-bottom: 25px;
+    line-height: 2;
+}
+
+/* Signup Button */
+.signup {
+    display: block;
+    width: 100%;
+    padding: 15px;
+    background: #0018F9;
+    color: #FFF;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 30px;
+    transition: 0.3s;
+}
+
+.signup:hover {
+    background: lightblue;
+    transform: scale(1.03);
+}
+
+
+
+/* Desktop Preview */
+@media (min-width: 600px) {
+    .background {
+        max-width: 430px;
+    }
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="background"></div>
+
+<div class="container">
+    <div class="card">
+
+        <!-- Replace profile.jpg with your image -->
+        <img src="profile.jpg" class="profile" alt="Profile Picture">
+
+        <h2>See full profile in the app</h2>
+
+        <p1>
+            Use the app to see more about annukammal
+        </p1>
+<br>
+        <p2>
+            By continuing, you agree to instagram's Terms of Use and Privacy Policy.
+        </p2>
+
+        <a href="signup.html" class="signup">
+            Sign Up
+        </a>
+
+        
+
+    </div>
+</div>
+
+</body>
+</html>
